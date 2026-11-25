@@ -1025,3 +1025,31 @@ legend { padding: 0; margin-bottom: 8px; }
 @keyframes vt-sortie { to { opacity: 0; translate: 0 -12px; } }
 @keyframes vt-entree { from { opacity: 0; translate: 0 16px; } }
 @keyframes apparait-deco { from { opacity: 0; } }
+
+/* ==========================================================================
+   Mobile (< 900px) : château sous le texte, fleurs devant les encarts
+   ========================================================================== */
+@media (max-width: 899px) {
+  /* Le château suit le texte au lieu d'être en fond : plus de chevauchement,
+     quelle que soit la hauteur de l'écran */
+  .hero-plein { flex-direction: column; align-items: center; justify-content: center; padding-bottom: 24px; }
+  .hero-plein .chateau-fond {
+    position: static;
+    order: 2;
+    margin-top: 8px;
+    width: 118%;
+    flex-shrink: 0;
+    transform: none;
+    padding-top: 12px;
+  }
+
+  /* Fleurs devant les encarts, plus petites et rejetées dans les coins */
+  .cadre-fleuri { z-index: 15; }
+  .f-hg, .f-hd { --w: 80px; --ay: calc(var(--w) * .99 - 34px); }
+  .f-hg { --ax: -16px; }
+  .f-hd { --ax: calc(100% + 16px); }
+  .f-bg, .f-bd { --w: 62px; }
+  .contenu .carte { padding-left: 18px; padding-right: 18px; }
+  .f-bg { --ax: 10px; }
+  .f-bd { --ax: calc(100% - 10px); }
+}
