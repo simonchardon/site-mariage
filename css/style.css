@@ -277,6 +277,8 @@ body.menu-ouvert { overflow: hidden; }
 }
 .hero-centre { display: flex; flex-direction: column; align-items: center; }
 .titre-hero { font-size: 68px; line-height: 1.05; }
+/* Titre en « gras » : la police manuscrite n'a qu'une graisse, on épaissit le trait */
+.titre-hero { -webkit-text-stroke: 0.022em currentColor; paint-order: stroke fill; }
 .titre-hero .esperluette { font-size: 0.75em; margin-right: 0.08em; }
 .hero-plein .separateur { width: 160px; margin: 18px 0 12px; }
 .hero-plein .date { font-size: 20px; letter-spacing: 0.08em; color: var(--titre); }
