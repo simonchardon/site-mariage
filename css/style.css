@@ -1070,6 +1070,27 @@ legend { padding: 0; margin-bottom: 8px; }
     filter: drop-shadow(0 6px 14px rgba(95, 81, 69, .06));
     pointer-events: none;
   }
+  /* Arches comme sur ordinateur : en haut et en bas (sable), en haut (bleu) */
+  .page-accueil .contenu :is(.liseret-sable, .liseret-bleu)::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -25px 0;
+    background-repeat: no-repeat;
+    background-size: 200px 22px;
+    filter: drop-shadow(0 -2px 6px rgba(95, 81, 69, .04));
+    pointer-events: none;
+  }
+  .page-accueil .contenu .liseret-sable::after {
+    inset: -21px 0;
+    background-image: url('../assets/cadres/arche-haut-forme.svg'), url('../assets/cadres/arche-bas-forme.svg');
+    background-position: top center, bottom center;
+  }
+  .page-accueil .contenu .liseret-bleu::after {
+    inset: -21px 0 0;
+    background-image: url('../assets/cadres/arche-haut-forme.svg');
+    background-position: top center;
+  }
 
   /* Fleurs devant les encarts, plus petites et rejetées dans les coins */
   .cadre-fleuri { z-index: 15; }

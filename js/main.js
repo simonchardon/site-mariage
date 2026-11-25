@@ -404,6 +404,16 @@
       }
     }, { passive: false });
     window.addEventListener('touchend', function () { departDoigt = null; }, { passive: true });
+    // Filet de sécurité (aperçu intégré, souris, clavier…) : si la page quitte l'accueil
+    // ou le premier encart sans passer par le glissé, on termine le mouvement en douceur
+    var dernierY = window.scrollY;
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY, c = cibleM(), avant = dernierY;
+      dernierY = y;
+      if (animM || c < 10) return;
+      if (avant < 2 && y > 2 && y < c - 2) glisserVers(c);
+      else if (Math.abs(avant - c) < 3 && y < c - 2 && y > 2) glisserVers(0);
+    }, { passive: true });
   }
 
   /* ---------- Accueil : château en arrière-plan (ordinateur et mobile) ----------
