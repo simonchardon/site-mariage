@@ -658,8 +658,8 @@ legend { padding: 0; margin-bottom: 8px; }
     z-index: -2;
     inset: -20px;
     border: 50px solid transparent;
-    border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 / 50px stretch;
-    opacity: 0.75;
+    border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 fill / 50px stretch;
+    filter: drop-shadow(0 10px 22px rgba(95, 81, 69, 0.09));
     pointer-events: none;
   }
   .liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
