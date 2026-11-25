@@ -234,16 +234,31 @@ body.menu-ouvert { overflow: hidden; }
 }
 .bouton:hover { color: var(--texte-bouton); filter: brightness(0.96); }
 
+/* Boutons roses façon liseré : coins incurvés et filet intérieur, comme les encarts
+   (dessin 9-slice : les coins gardent leur forme quelle que soit la taille du bouton) */
+.bouton, .bouton-contour { position: relative; isolation: isolate; }
+.bouton { background: none; border-radius: 0; }
+.bouton::before, .bouton-contour::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 14px solid transparent;
+  border-image: url('../assets/cadres/bouton.svg') 14 fill / 14px stretch;
+  pointer-events: none;
+}
+.bouton-contour::before { border-image-source: url('../assets/cadres/bouton-contour.svg'); }
+.bouton-contour:hover::before { border-image-source: url('../assets/cadres/bouton-contour-survol.svg'); }
+
 .bouton-contour {
   padding: 10px 18px;
-  border-radius: 14px;
-  border: 1px solid var(--bouton);
+  border: 0;
   color: var(--texte-bouton);
   font-size: 14px;
   letter-spacing: 0.1em;
   text-decoration: none;
 }
-.bouton-contour:hover { color: var(--texte-bouton); background: color-mix(in srgb, var(--bouton) 25%, transparent); }
+.bouton-contour:hover { color: var(--texte-bouton); }
 
 /* --------------------------------------------------------------------------
    Accueil
