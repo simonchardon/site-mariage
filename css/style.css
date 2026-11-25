@@ -1,6 +1,6 @@
 /* ==========================================================================
    Site faire-part — Maëlle & Raphaël
-   Feuille de style commune aux maquettes V2 (blanc pur) et V3 (blanc cassé).
+   Feuille de style du site, d'après la maquette V3 (fond blanc cassé).
    Mobile d'abord ; la mise en page desktop s'active à partir de 900px.
    ========================================================================== */
 
@@ -11,7 +11,7 @@
 }
 
 :root {
-  --fond: #ffffff;          /* V2 : blanc pur */
+  --fond: #faf6ef;          /* V3 : blanc cassé (V2 : #ffffff) */
   --texte: #5f5145;
   --titre: #6b5a4b;
   --lien: #7d664f;
@@ -29,9 +29,6 @@
 
   --cadre: 28px;            /* bordure transparente des cartes (marge des décors) */
 }
-
-/* V3 : même maquette, fond blanc cassé */
-html.theme-v3 { --fond: #faf6ef; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
