@@ -1,12 +1,13 @@
 # Site faire-part — Maëlle & Raphaël
 
-Maquettes statiques (HTML/CSS/JS, sans dépendance ni build) du site de mariage.
+Site statique (HTML/CSS/JS, sans dépendance ni build) du mariage, d'après la maquette V3 (fond blanc cassé `#FAF6EF`).
 
-- `v2/` : version blanc pur
-- `v3/` : version blanc cassé (`#FAF6EF`), même code avec la classe `theme-v3` sur `<html>`
-- `css/style.css` : styles communs, mobile d'abord, mise en page desktop à partir de 900px
+- `*.html` : pages du site, à la racine
+- `css/style.css` : styles, mobile d'abord, mise en page desktop à partir de 900px
 - `js/main.js` : menu mobile, formulaire de réponse, page « Vos musiques »
 - `assets/` : illustrations et police Milton Two
+
+Pour revenir au fond blanc pur de la maquette V2, changer `--fond` en `#ffffff` dans `css/style.css`.
 
 Pages : accueil (`index.html`), réponse (`rsvp.html`), merci oui / non, vos musiques.
 

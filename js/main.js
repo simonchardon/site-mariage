@@ -7,11 +7,18 @@
   var boutonMenu = document.querySelector('.bouton-menu');
   var menu = document.getElementById('menu-mobile');
   if (boutonMenu && menu) {
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var basculerMenu = function (ouvrir) {
       boutonMenu.setAttribute('aria-expanded', String(ouvrir));
       boutonMenu.setAttribute('aria-label', ouvrir ? 'Fermer le menu' : 'Ouvrir le menu');
-      menu.hidden = !ouvrir;
       document.body.classList.toggle('menu-ouvert', ouvrir);
+      menu.classList.remove('fermeture');
+      if (ouvrir || reduit || menu.hidden) { menu.hidden = !ouvrir; return; }
+      // Fermeture animée : on masque une fois le fondu terminé
+      menu.classList.add('fermeture');
+      setTimeout(function () {
+        if (menu.classList.contains('fermeture')) { menu.hidden = true; menu.classList.remove('fermeture'); }
+      }, 260);
     };
     boutonMenu.addEventListener('click', function () {
       basculerMenu(boutonMenu.getAttribute('aria-expanded') !== 'true');
@@ -21,6 +28,149 @@
         basculerMenu(false);
         boutonMenu.focus();
       }
+    });
+  }
+
+  /* ---------- Autres pages : ordre d'apparition des encarts ---------- */
+  if (!document.body.classList.contains('page-accueil')) {
+    document.querySelectorAll('.contenu .carte').forEach(function (carte, i) {
+      carte.style.setProperty('--i', i);
+    });
+  }
+
+  /* ---------- Accueil : apparition des encarts au défilement ---------- */
+  var contenuAccueil = document.querySelector('.page-accueil .contenu');
+  var mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Ordinateur seulement : en mobile, le défilement reste naturel, sans effet d'étape
+  if (contenuAccueil && 'IntersectionObserver' in window && !mouvementReduit &&
+      window.matchMedia('(min-width: 900px)').matches) {
+    document.documentElement.classList.add('anim');
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) {
+          entree.target.classList.add('visible');
+          observateur.unobserve(entree.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(contenuAccueil.children, function (el) { observateur.observe(el); });
+  }
+
+  /* ---------- Accueil : défilement par étapes (ordinateur) ----------
+     Un geste de molette, de pavé tactile ou une touche fait glisser jusqu'à
+     l'encart suivant ou précédent. Un encart plus haut que l'écran se lit
+     d'abord normalement, puis on passe au suivant. */
+  var etapesPossibles = contenuAccueil && !mouvementReduit &&
+    window.matchMedia('(min-width: 900px) and (pointer: fine)').matches;
+  if (etapesPossibles) {
+    var entete = document.querySelector('.entete');
+    var etapes = [document.querySelector('.hero-plein')].concat(
+      Array.prototype.slice.call(contenuAccueil.querySelectorAll(':scope > .carte')));
+    var enCours = false, indexVise = 0, animation = null;
+    var dernierEvenement = 0, dernierSens = 0, pic = 0, creux = 0;
+
+    var hauteurEntete = function () { return entete ? entete.offsetHeight : 0; };
+    // Position dans la page sans tenir compte des animations (translate) en cours
+    var haut = function (el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; };
+    // Position de défilement qui centre l'encart sous l'en-tête (ou l'aligne en haut s'il est trop grand)
+    var cible = function (el) {
+      var h = hauteurEntete(), dispo = window.innerHeight - h;
+      if (el === etapes[0]) return 0;
+      var marge = Math.max(24, (dispo - el.offsetHeight) / 2);
+      return Math.max(0, Math.round(haut(el) - h - marge));
+    };
+    var indexCourant = function () {
+      var y = window.scrollY, meilleur = 0, ecart = Infinity;
+      etapes.forEach(function (el, i) {
+        var d = Math.abs(cible(el) - y);
+        if (d < ecart) { ecart = d; meilleur = i; }
+      });
+      return meilleur;
+    };
+    // Démarre tout de suite puis freine en douceur : la page réagit dès le geste
+    var adoucir = function (t) { return 1 - Math.pow(1 - t, 4); };
+    // Glissé vers y ; s'il y en a déjà un en cours, il est réorienté depuis la position actuelle
+    var allerA = function (y) {
+      if (animation) cancelAnimationFrame(animation);
+      var depart = window.scrollY, distance = y - depart;
+      if (Math.abs(distance) < 2) { enCours = false; return; }
+      var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null, courbe = adoucir;
+      // Passage entre l'accueil et le premier encart : plus lent et progressif,
+      // pour laisser le temps de voir le château grossir et le titre s'effacer
+      if (Math.min(depart, y) < 2) {
+        duree = 1700;
+        courbe = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+      }
+      enCours = true;
+      var pas = function (t) {
+        if (debut === null) debut = t;
+        var p = Math.min(1, (t - debut) / duree);
+        window.scrollTo({ top: depart + distance * courbe(p), behavior: 'instant' });
+        if (p < 1) animation = requestAnimationFrame(pas);
+        else { enCours = false; animation = null; }
+      };
+      animation = requestAnimationFrame(pas);
+    };
+    // Renvoie true si le geste a été consommé par la lecture d'un encart trop haut
+    var defilerDansEncart = function (sens, delta) {
+      var i = indexCourant(), el = etapes[i];
+      var h = hauteurEntete(), dispo = window.innerHeight - h;
+      if (i === 0 || el.offsetHeight <= dispo + 80) return false;
+      var y = window.scrollY, debutEl = haut(el) - h - 24, finEl = haut(el) + el.offsetHeight + 24 - window.innerHeight;
+      if (sens > 0 && y < finEl - 2) { window.scrollTo({ top: Math.min(finEl, y + delta), behavior: 'instant' }); return true; }
+      if (sens < 0 && y > debutEl + 2) { window.scrollTo({ top: Math.max(debutEl, y + delta), behavior: 'instant' }); return true; }
+      return false;
+    };
+    // Espace sous le dernier encart (contact) pour qu'il puisse lui aussi être centré
+    var ajusterBas = function () {
+      var dernier = etapes[etapes.length - 1];
+      var dispo = window.innerHeight - hauteurEntete();
+      contenuAccueil.style.paddingBottom = Math.max(64, Math.round((dispo - dernier.offsetHeight) / 2)) + 'px';
+    };
+    ajusterBas();
+    window.addEventListener('resize', ajusterBas);
+    window.addEventListener('load', ajusterBas);
+    // Les étapes, plus le bas de page s'il dépasse le dernier encart
+    var position = function (i) {
+      if (i < etapes.length) return cible(etapes[i]);
+      return document.documentElement.scrollHeight - window.innerHeight;
+    };
+    var nbPositions = function () {
+      var bas = document.documentElement.scrollHeight - window.innerHeight;
+      return bas > cible(etapes[etapes.length - 1]) + 10 ? etapes.length + 1 : etapes.length;
+    };
+    // Chaque geste compte : pendant un glissé, un nouveau geste repart de l'étape visée
+    var etapeSuivante = function (sens) {
+      var base = enCours ? indexVise : indexCourant();
+      indexVise = Math.max(0, Math.min(nbPositions() - 1, base + sens));
+      allerA(position(indexVise));
+    };
+
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey) return; // zoom
+      e.preventDefault();
+      var maintenant = performance.now();
+      var delta = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
+      if (!delta) return;
+      var sens = delta > 0 ? 1 : -1, fort = Math.abs(delta);
+      // Nouveau geste : pause, changement de sens, ou relance (le pavé tactile envoie
+      // une traîne d'inertie qui décroît ; un nouveau coup de doigt la fait remonter)
+      var nouveau = maintenant - dernierEvenement > 90 || sens !== dernierSens ||
+        (creux < pic * 0.6 && fort > creux * 1.8 && fort >= 12);
+      if (nouveau) { pic = fort; creux = fort; }
+      else { pic = Math.max(pic, fort); creux = fort < pic ? Math.min(creux, fort) : pic; }
+      dernierEvenement = maintenant; dernierSens = sens;
+      // Encart plus haut que l'écran : on le lit normalement jusqu'à son bord
+      if (!enCours && defilerDansEncart(sens, delta)) return;
+      if (nouveau) etapeSuivante(sens);
+    }, { passive: false });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+      var sens = { ArrowDown: 1, PageDown: 1, ' ': e.shiftKey ? -1 : 1, ArrowUp: -1, PageUp: -1 }[e.key];
+      if (!sens) return;
+      e.preventDefault();
+      etapeSuivante(sens);
     });
   }
 
@@ -215,5 +365,110 @@
     });
 
     rendu();
+  }
+
+  /* ---------- Accueil : première étape glissée (mobile) ----------
+     Depuis l'accueil, un glissé vers le bas amène doucement au premier encart
+     (le temps de voir le château grossir) ; un glissé vers le haut depuis le
+     premier encart ramène à l'accueil. Ensuite le défilement reste naturel. */
+  var heroMobile = document.querySelector('.page-accueil .hero-plein');
+  var premierEncart = contenuAccueil && contenuAccueil.querySelector(':scope > .carte');
+  if (heroMobile && premierEncart && !mouvementReduit &&
+      window.matchMedia('(max-width: 899px)').matches) {
+    var enteteM = document.querySelector('.entete');
+    var hautM = function (el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; };
+    var cibleM = function () {
+      var h = enteteM ? enteteM.offsetHeight : 0, dispo = window.innerHeight - h;
+      var marge = Math.max(16, (dispo - premierEncart.offsetHeight) / 2);
+      return Math.max(0, Math.round(hautM(premierEncart) - h - marge));
+    };
+    var animM = null, departDoigt = null, gere = false;
+    var glisserVers = function (y) {
+      if (animM) cancelAnimationFrame(animM);
+      var depart = window.scrollY, distance = y - depart, debut = null, duree = 1500;
+      if (Math.abs(distance) < 2) return;
+      var courbe = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+      var pas = function (t) {
+        if (debut === null) debut = t;
+        var p = Math.min(1, (t - debut) / duree);
+        window.scrollTo(0, depart + distance * courbe(p));
+        animM = p < 1 ? requestAnimationFrame(pas) : null;
+      };
+      animM = requestAnimationFrame(pas);
+    };
+    window.addEventListener('touchstart', function (e) {
+      departDoigt = e.touches[0].clientY; gere = false;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (departDoigt === null) return;
+      var dy = departDoigt - e.touches[0].clientY, y = window.scrollY, c = cibleM();
+      if (animM) { e.preventDefault(); return; }
+      if (Math.abs(dy) < 8) return;
+      if (dy > 0 && y < c - 2) {            // vers le bas depuis l'accueil
+        e.preventDefault(); gere = true; departDoigt = null; glisserVers(c);
+      } else if (dy < 0 && y > 2 && y <= c + 2) { // vers le haut depuis le premier encart
+        e.preventDefault(); gere = true; departDoigt = null; glisserVers(0);
+      }
+    }, { passive: false });
+    window.addEventListener('touchend', function () { departDoigt = null; }, { passive: true });
+    // Filet de sécurité (aperçu intégré, souris, clavier…) : si la page quitte l'accueil
+    // ou le premier encart sans passer par le glissé, on termine le mouvement en douceur
+    var dernierY = window.scrollY;
+    window.addEventListener('scroll', function () {
+      var y = window.scrollY, c = cibleM(), avant = dernierY;
+      dernierY = y;
+      if (animM || c < 10) return;
+      if (avant < 2 && y > 2 && y < c - 2) glisserVers(c);
+      else if (Math.abs(avant - c) < 3 && y < c - 2 && y > 2) glisserVers(0);
+    }, { passive: true });
+  }
+
+  /* ---------- Accueil : château en arrière-plan (ordinateur et mobile) ----------
+     Au défilement, le château grossit et remonte pendant que le titre s'efface,
+     puis il reste en fond, plus discret, sous le contenu qui défile. */
+  var chateau = document.querySelector('.page-accueil .chateau-fond');
+  var heroCentre = document.querySelector('.page-accueil .hero-centre');
+  var heroPlein = document.querySelector('.page-accueil .hero-plein');
+  if (chateau && heroCentre && heroPlein) {
+    // Une fois l'apparition terminée, l'opacité est pilotée par le défilement
+    var libererAnimation = function () { chateau.style.animation = 'none'; majChateau(); };
+    chateau.addEventListener('animationend', libererAnimation);
+    if (mouvementReduit) chateau.style.animation = 'none';
+    var majPrevue = false;
+    var mobileChateau = window.matchMedia('(max-width: 899px)');
+    var majChateau = function () {
+      majPrevue = false;
+      var course = Math.max(1, heroPlein.offsetHeight * 0.85);
+      var p = Math.min(1, Math.max(0, window.scrollY / course));
+      var e = p * p * (3 - 2 * p); // départ et arrivée en douceur
+      var echelle = 1 + 0.32 * e, cy = -0.1 * window.innerHeight * e;
+      if (mobileChateau.matches) {
+        // Mobile : au départ le château se place juste sous la date (pas de vide entre les deux),
+        // puis à la fin du mouvement il est centré dans l'écran sous l'en-tête
+        var hEntete = document.querySelector('.entete') ? document.querySelector('.entete').offsetHeight : 0;
+        var hChateau = chateau.offsetHeight;
+        var basTexte = 0, el = heroCentre;
+        while (el) { basTexte += el.offsetTop; el = el.offsetParent; }
+        basTexte += heroCentre.offsetHeight;
+        // Centré dans l'espace libre entre la date et le bas de l'écran
+        // (le haut de l'image est fondu, on le laisse effleurer la date)
+        var libreHaut = basTexte - hChateau * 0.12;
+        var depart = Math.min(0, (libreHaut + window.innerHeight) / 2 + hChateau / 2 - window.innerHeight);
+        var centreVoulu = hEntete + (window.innerHeight - hEntete) / 2;
+        var arrivee = Math.min(0, centreVoulu + hChateau * 1.32 / 2 - window.innerHeight);
+        cy = depart + (arrivee - depart) * e;
+      }
+      chateau.style.setProperty('--cs', echelle.toFixed(4));
+      chateau.style.setProperty('--cy', cy.toFixed(1) + 'px');
+      chateau.style.setProperty('--co', (0.9 - 0.4 * e).toFixed(3));
+      var t = Math.min(1, p * 1.7);
+      heroCentre.style.opacity = (1 - t).toFixed(3);
+      heroCentre.style.transform = 'translateY(' + (-70 * t).toFixed(1) + 'px) scale(' + (1 - 0.06 * t).toFixed(4) + ')';
+    };
+    window.addEventListener('scroll', function () {
+      if (!majPrevue) { majPrevue = true; requestAnimationFrame(majChateau); }
+    }, { passive: true });
+    window.addEventListener('resize', majChateau);
+    majChateau();
   }
 })();
