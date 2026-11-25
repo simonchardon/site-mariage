@@ -252,6 +252,7 @@ body.menu-ouvert { overflow: hidden; }
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  background: var(--fond); /* nécessaire pour le fondu « multiply » du château */
   min-height: calc(100svh - 56px);
   display: flex;
   align-items: flex-start;
@@ -269,10 +270,9 @@ body.menu-ouvert { overflow: hidden; }
   max-width: none;
   transform: translateX(-50%);
   opacity: 0.9;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 32%), linear-gradient(to right, #000 82%, transparent 99%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 32%), linear-gradient(to right, #000 82%, transparent 99%);
-  mask-composite: intersect;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 30%);
   pointer-events: none;
 }
 .hero-centre { display: flex; flex-direction: column; align-items: center; }
@@ -747,7 +747,7 @@ legend { padding: 0; margin-bottom: 8px; }
 
   /* Accueil plein écran */
   .hero-plein { min-height: calc(100svh - 76px); padding: 7vh 200px 0; }
-  .chateau-fond { width: min(1180px, 88vw, 118vh); }
+  .chateau-fond { width: min(1180px, 88vw, 105vh); }
   .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
   .titre-hero .esperluette { display: inline; font-size: 0.8em; margin: 0 0.1em; }
   .hero-plein .separateur { width: 240px; margin: 20px 0 14px; }
