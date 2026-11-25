@@ -937,20 +937,9 @@ legend { padding: 0; margin-bottom: 8px; }
    Accueil : défilement par étapes et animations
    ========================================================================== */
 
-/* Défilement par étapes : chaque encart vient se caler à l'écran */
-html:has(body.page-accueil) {
-  scroll-snap-type: y proximity;
-  scroll-padding-top: 56px;
-}
-.page-accueil .hero-plein { scroll-snap-align: start; }
-.page-accueil .contenu .carte { scroll-snap-align: center; scroll-snap-stop: normal; }
-
-@media (min-width: 900px) {
-  html:has(body.page-accueil) { scroll-snap-type: y mandatory; scroll-padding-top: 76px; }
-}
+/* Défilement par étapes : géré en JS (js/main.js) pour un glissé fluide d'un encart à l'autre */
 
 @media (prefers-reduced-motion: no-preference) {
-  html:has(body.page-accueil) { scroll-behavior: smooth; }
 
   /* Arrivée sur la page : les fleurs poussent depuis les bords, puis titre, date et château */
   .cadre-fleuri .fleur { animation: fleur-pousse 1.6s cubic-bezier(.2, .7, .2, 1) both; }

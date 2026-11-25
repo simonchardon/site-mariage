@@ -40,6 +40,94 @@
     Array.prototype.forEach.call(contenuAccueil.children, function (el) { observateur.observe(el); });
   }
 
+  /* ---------- Accueil : défilement par étapes (ordinateur) ----------
+     Un geste de molette, de pavé tactile ou une touche fait glisser jusqu'à
+     l'encart suivant ou précédent. Un encart plus haut que l'écran se lit
+     d'abord normalement, puis on passe au suivant. */
+  var etapesPossibles = contenuAccueil && !mouvementReduit &&
+    window.matchMedia('(min-width: 900px) and (pointer: fine)').matches;
+  if (etapesPossibles) {
+    var entete = document.querySelector('.entete');
+    var etapes = [document.querySelector('.hero-plein')].concat(
+      Array.prototype.slice.call(contenuAccueil.querySelectorAll(':scope > .carte')));
+    var enCours = false, verrouJusqua = 0, cumul = 0, dernierEvenement = 0;
+
+    var hauteurEntete = function () { return entete ? entete.offsetHeight : 0; };
+    var haut = function (el) { return el.getBoundingClientRect().top + window.scrollY; };
+    // Position de défilement qui centre l'encart sous l'en-tête (ou l'aligne en haut s'il est trop grand)
+    var cible = function (el) {
+      var h = hauteurEntete(), dispo = window.innerHeight - h;
+      if (el === etapes[0]) return 0;
+      var marge = Math.max(24, (dispo - el.offsetHeight) / 2);
+      return Math.max(0, Math.round(haut(el) - h - marge));
+    };
+    var indexCourant = function () {
+      var y = window.scrollY, meilleur = 0, ecart = Infinity;
+      etapes.forEach(function (el, i) {
+        var d = Math.abs(cible(el) - y);
+        if (d < ecart) { ecart = d; meilleur = i; }
+      });
+      return meilleur;
+    };
+    var adoucir = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    var allerA = function (y) {
+      var depart = window.scrollY, distance = y - depart;
+      if (Math.abs(distance) < 2) return;
+      var duree = Math.min(1100, 650 + Math.abs(distance) * 0.35), debut = null;
+      enCours = true;
+      var pas = function (t) {
+        if (debut === null) debut = t;
+        var p = Math.min(1, (t - debut) / duree);
+        window.scrollTo({ top: depart + distance * adoucir(p), behavior: 'instant' });
+        if (p < 1) requestAnimationFrame(pas);
+        else { enCours = false; verrouJusqua = performance.now() + 350; }
+      };
+      requestAnimationFrame(pas);
+    };
+    // Renvoie true si le geste a été consommé par la lecture d'un encart trop haut
+    var defilerDansEncart = function (sens, delta) {
+      var i = indexCourant(), el = etapes[i];
+      var h = hauteurEntete(), dispo = window.innerHeight - h;
+      if (el.offsetHeight + 48 <= dispo) return false;
+      var y = window.scrollY, debutEl = haut(el) - h - 24, finEl = haut(el) + el.offsetHeight + 24 - window.innerHeight;
+      if (sens > 0 && y < finEl - 2) { window.scrollTo({ top: Math.min(finEl, y + delta), behavior: 'instant' }); return true; }
+      if (sens < 0 && y > debutEl + 2) { window.scrollTo({ top: Math.max(debutEl, y + delta), behavior: 'instant' }); return true; }
+      return false;
+    };
+    var etapeSuivante = function (sens) {
+      var i = indexCourant(), j = Math.max(0, Math.min(etapes.length - 1, i + sens));
+      if (j === i) {
+        // Après le dernier encart : on laisse descendre jusqu'en bas de page
+        if (sens > 0) allerA(document.documentElement.scrollHeight - window.innerHeight);
+        return;
+      }
+      allerA(cible(etapes[j]));
+    };
+
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey) return; // zoom
+      e.preventDefault();
+      var maintenant = performance.now();
+      if (maintenant - dernierEvenement > 180) cumul = 0; // nouveau geste
+      dernierEvenement = maintenant;
+      if (enCours) return;
+      var delta = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
+      var sens = delta > 0 ? 1 : -1;
+      if (defilerDansEncart(sens, delta)) { verrouJusqua = 0; cumul = 0; return; }
+      if (maintenant < verrouJusqua) { verrouJusqua = maintenant + 200; return; } // inertie du pavé tactile
+      cumul += delta;
+      if (Math.abs(cumul) > 40) { cumul = 0; etapeSuivante(sens); }
+    }, { passive: false });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+      var sens = { ArrowDown: 1, PageDown: 1, ' ': e.shiftKey ? -1 : 1, ArrowUp: -1, PageUp: -1 }[e.key];
+      if (!sens) return;
+      e.preventDefault();
+      if (!enCours) etapeSuivante(sens);
+    });
+  }
+
   /* ---------- Réponse (RSVP) ---------- */
   var formRsvp = document.getElementById('form-rsvp');
   if (formRsvp) {
