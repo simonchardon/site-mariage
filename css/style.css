@@ -761,12 +761,14 @@ legend { padding: 0; margin-bottom: 8px; }
     background-position: top center;
   }
   /* Encoches découpées pour de vrai dans le fond : on voit ce qu'il y a derrière (château) */
-  .liseret-rose::before {
+  .liseret-rose:not(.histoire)::before {
     -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 16px, #000 16.5px), radial-gradient(circle at 100% 50%, transparent 16px, #000 16.5px);
     -webkit-mask-composite: source-in;
     mask-image: radial-gradient(circle at 0 50%, transparent 16px, #000 16.5px), radial-gradient(circle at 100% 50%, transparent 16px, #000 16.5px);
     mask-composite: intersect;
   }
+  /* Notre histoire : cadre rose sans encoches */
+  .histoire.liseret-rose::after { content: none; }
   .liseret-rose::after {
     inset: -20px;
     background-image: url('../assets/cadres/encoche-g-rose.svg'), url('../assets/cadres/encoche-d-rose.svg');
