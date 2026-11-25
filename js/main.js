@@ -360,13 +360,13 @@
     rendu();
   }
 
-  /* ---------- Accueil : château en arrière-plan (ordinateur) ----------
+  /* ---------- Accueil : château en arrière-plan (ordinateur et mobile) ----------
      Au défilement, le château grossit et remonte pendant que le titre s'efface,
      puis il reste en fond, plus discret, sous le contenu qui défile. */
   var chateau = document.querySelector('.page-accueil .chateau-fond');
   var heroCentre = document.querySelector('.page-accueil .hero-centre');
   var heroPlein = document.querySelector('.page-accueil .hero-plein');
-  if (chateau && heroCentre && heroPlein && window.matchMedia('(min-width: 900px)').matches) {
+  if (chateau && heroCentre && heroPlein) {
     // Une fois l'apparition terminée, l'opacité est pilotée par le défilement
     var libererAnimation = function () { chateau.style.animation = 'none'; majChateau(); };
     chateau.addEventListener('animationend', libererAnimation);

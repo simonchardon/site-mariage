@@ -1045,17 +1045,25 @@ legend { padding: 0; margin-bottom: 8px; }
    Mobile (< 900px) : château sous le texte, fleurs devant les encarts
    ========================================================================== */
 @media (max-width: 899px) {
-  /* Le château suit le texte au lieu d'être en fond : plus de chevauchement,
-     quelle que soit la hauteur de l'écran */
-  .hero-plein { flex-direction: column; align-items: center; justify-content: flex-start; min-height: 0; padding-top: 28px; padding-bottom: 24px; }
+  /* Comme sur ordinateur : château fixe en fond, ancré en bas de l'écran ; au défilement
+     il grossit et remonte (js/main.js), le titre s'efface et les encarts passent dessus */
+  .hero-plein { padding-top: 28px; }
   .hero-plein .chateau-fond {
-    position: static;
-    order: 2;
-    margin-top: 8px;
-    width: 118%;
-    flex-shrink: 0;
-    transform: none;
-    padding-top: 12px;
+    position: fixed;
+    width: min(118vw, 92svh);
+    transform-origin: 50% 100%;
+    transform: translateX(-50%) translateY(var(--cy, 0px)) scale(var(--cs, 1));
+    opacity: var(--co, .9);
+    will-change: transform, opacity;
+  }
+  .page-accueil .hero-centre { will-change: transform, opacity; }
+  /* Encarts sans liseré mais sur fond crème, pour rester lisibles devant le château */
+  .page-accueil .contenu .carte {
+    background: #fcf9f4;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(95, 81, 69, .06);
+    padding-top: 26px;
+    padding-bottom: 26px;
   }
 
   /* Fleurs devant les encarts, plus petites et rejetées dans les coins */
