@@ -321,15 +321,14 @@ body.menu-ouvert { overflow: hidden; }
 .histoire .guirlande { width: 200px; margin-bottom: 4px; }
 .histoire .sous-titre { margin: 8px 0 18px; font-style: italic; font-size: 17px; }
 
-.polaroid {
-  margin: 26px 0 0;
-  padding: 10px 10px 34px;
-  background: #ffffff;
-  box-shadow: 0 6px 18px rgba(95, 81, 69, 0.18);
-  transform: rotate(-2deg);
+.photo-histoire {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-top: 26px;
+  border-radius: 14px;
 }
-.polaroid img { display: block; width: 240px; }
-.polaroid figcaption { margin-top: 8px; font-size: 30px; }
 
 .deroulement { padding: 30px 6px 28px; }
 .deroulement .ornement { width: 190px; margin-bottom: 4px; }
@@ -802,9 +801,7 @@ legend { padding: 0; margin-bottom: 8px; }
   }
   .histoire .guirlande { width: 220px; margin-bottom: 4px; }
   .histoire .sous-titre { font-size: 20px; }
-  .polaroid { margin: 0; justify-self: center; padding: 12px 12px 44px; box-shadow: 0 8px 24px rgba(95, 81, 69, 0.18); }
-  .polaroid img { width: 320px; }
-  .polaroid figcaption { margin-top: 10px; font-size: 39px; }
+  .photo-histoire { margin: 0; justify-self: center; max-width: 360px; }
 
   .deroulement { padding: 44px 40px; }
   .deroulement .ornement { width: 240px; }
