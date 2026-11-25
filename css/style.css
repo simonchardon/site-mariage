@@ -254,17 +254,32 @@ body.menu-ouvert { overflow: hidden; }
   isolation: isolate;
   min-height: calc(100svh - 56px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 72px 20px 96px;
+  padding: 64px 20px 0;
   text-align: center;
+}
+/* Château en fond, ancré en bas et fondu vers le haut pour laisser respirer le titre */
+.chateau-fond {
+  position: absolute;
+  z-index: -2;
+  left: 50%;
+  bottom: 0;
+  width: 150%;
+  max-width: none;
+  transform: translateX(-50%);
+  opacity: 0.9;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 32%), linear-gradient(to right, #000 82%, transparent 99%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 32%), linear-gradient(to right, #000 82%, transparent 99%);
+  mask-composite: intersect;
+  pointer-events: none;
 }
 .hero-centre { display: flex; flex-direction: column; align-items: center; }
 .titre-hero { font-size: 76px; line-height: 0.95; }
 .titre-hero .esperluette { display: block; font-size: 0.7em; margin: 4px 0; }
 .hero-plein .separateur { width: 160px; margin: 18px 0 12px; }
 .hero-plein .date { font-size: 20px; letter-spacing: 0.08em; color: var(--titre); }
-.hero-plein .chateau { width: 100%; max-width: 300px; margin-top: 22px; }
 
 .fleur { position: absolute; z-index: -1; pointer-events: none; height: auto; }
 .f-hg  { width: 150px; left: -34px;  top: -30px; }
@@ -731,12 +746,12 @@ legend { padding: 0; margin-bottom: 8px; }
   .deco--mobile { display: none; }
 
   /* Accueil plein écran */
-  .hero-plein { min-height: calc(100svh - 76px); padding: 56px 200px 64px; }
+  .hero-plein { min-height: calc(100svh - 76px); padding: 7vh 200px 0; }
+  .chateau-fond { width: min(1180px, 88vw, 118vh); }
   .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
   .titre-hero .esperluette { display: inline; font-size: 0.8em; margin: 0 0.1em; }
   .hero-plein .separateur { width: 240px; margin: 20px 0 14px; }
   .hero-plein .date { font-size: 26px; }
-  .hero-plein .chateau { max-width: min(440px, 34vh * 1.5); margin-top: 26px; }
 
   .f-hg  { width: clamp(230px, 20vw, 320px); left: -60px;  top: -50px; }
   .f-hd  { width: clamp(230px, 20vw, 320px); right: -60px; top: -50px; }
