@@ -428,13 +428,22 @@
     chateau.addEventListener('animationend', libererAnimation);
     if (mouvementReduit) chateau.style.animation = 'none';
     var majPrevue = false;
+    var mobileChateau = window.matchMedia('(max-width: 899px)');
     var majChateau = function () {
       majPrevue = false;
       var course = Math.max(1, heroPlein.offsetHeight * 0.85);
       var p = Math.min(1, Math.max(0, window.scrollY / course));
       var e = p * p * (3 - 2 * p); // départ et arrivée en douceur
-      chateau.style.setProperty('--cs', (1 + 0.32 * e).toFixed(4));
-      chateau.style.setProperty('--cy', (-0.1 * window.innerHeight * e).toFixed(1) + 'px');
+      var echelle = 1 + 0.32 * e, montee = -0.1 * window.innerHeight;
+      if (mobileChateau.matches) {
+        // Mobile : à la fin du mouvement, le château est centré dans l'écran sous l'en-tête
+        var hEntete = document.querySelector('.entete') ? document.querySelector('.entete').offsetHeight : 0;
+        var hFinale = chateau.offsetHeight * 1.32;
+        var centreVoulu = hEntete + (window.innerHeight - hEntete) / 2;
+        montee = Math.min(0, centreVoulu + hFinale / 2 - window.innerHeight);
+      }
+      chateau.style.setProperty('--cs', echelle.toFixed(4));
+      chateau.style.setProperty('--cy', (montee * e).toFixed(1) + 'px');
       chateau.style.setProperty('--co', (0.9 - 0.4 * e).toFixed(3));
       var t = Math.min(1, p * 1.7);
       heroCentre.style.opacity = (1 - t).toFixed(3);
