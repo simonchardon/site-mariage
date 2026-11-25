@@ -659,7 +659,7 @@ legend { padding: 0; margin-bottom: 8px; }
     inset: -20px;
     border: 50px solid transparent;
     border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 fill / 50px stretch;
-    filter: drop-shadow(0 10px 22px rgba(95, 81, 69, 0.09));
+    filter: drop-shadow(0 6px 16px rgba(95, 81, 69, 0.045));
     pointer-events: none;
   }
   .liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
