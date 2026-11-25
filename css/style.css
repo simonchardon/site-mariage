@@ -51,7 +51,7 @@ a { color: var(--lien); }
 .contenu a:not(.bouton):not(.bouton-contour), .retour, .lien-bouton {
   text-decoration: none;
   padding-bottom: 9px;
-  background: url('../assets/img/soulignement.svg') center bottom / 100% 8px no-repeat;
+  background: url('../assets/img/soulignement.svg') center bottom / 100% 6px no-repeat;
 }
 .contenu a:not(.bouton):not(.bouton-contour):hover, .retour:hover, .lien-bouton:hover { color: var(--lien-survol); filter: brightness(.95); }
 a:hover { color: var(--lien-survol); }
@@ -722,7 +722,7 @@ legend { padding: 0; margin-bottom: 8px; }
   .nav-desktop a:not(.bouton) { padding: 10px 0; }
   .nav-desktop a[aria-current="page"]:not(.bouton) {
     color: var(--titre);
-    background: url('../assets/img/soulignement.svg') center bottom / 100% 8px no-repeat;
+    background: url('../assets/img/soulignement.svg') center bottom / 100% 6px no-repeat;
   }
   .nav-desktop .bouton { padding: 11px 22px; font-size: 16px; color: var(--texte-bouton); }
 
