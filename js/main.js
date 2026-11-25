@@ -24,6 +24,22 @@
     });
   }
 
+  /* ---------- Accueil : apparition des encarts au défilement ---------- */
+  var contenuAccueil = document.querySelector('.page-accueil .contenu');
+  var mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (contenuAccueil && 'IntersectionObserver' in window && !mouvementReduit) {
+    document.documentElement.classList.add('anim');
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (entree.isIntersecting) {
+          entree.target.classList.add('visible');
+          observateur.unobserve(entree.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(contenuAccueil.children, function (el) { observateur.observe(el); });
+  }
+
   /* ---------- Réponse (RSVP) ---------- */
   var formRsvp = document.getElementById('form-rsvp');
   if (formRsvp) {

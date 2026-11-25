@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="./css/style.css">
 <script src="./js/main.js" defer></script>
 </head>
-<body>
+<body class="page-accueil">
 
 <header class="entete">
   <a class="logo" href="index.html" aria-label="Accueil — Maëlle et Raphaël">M &amp; R</a>
@@ -38,9 +38,8 @@
   </nav>
 </div>
 
-<!-- Accueil plein écran -->
-<section class="hero-plein" aria-labelledby="titre-accueil">
-  <img class="chateau-fond" src="./assets/img/chateau-face.webp" srcset="./assets/img/chateau-face-768.webp 768w, ./assets/img/chateau-face.webp 1536w" sizes="(min-width: 900px) min(1180px, 88vw), 150vw" alt="Aquarelle du Petit Château de Seicheprey, lieu de la réception" width="1536" height="1024">
+<!-- Cadre fleuri fixe : reste en place pendant que le contenu défile -->
+<div class="cadre-fleuri" aria-hidden="true">
   <img class="fleur f-hg" src="./assets/img/fleurs-coin-hd.webp" alt="">
   <img class="fleur f-hd" src="./assets/img/fleurs-coin-hd.webp" alt="">
   <img class="fleur f-mg" src="./assets/img/fleurs-tige-hd.webp" alt="">
@@ -49,6 +48,11 @@
   <img class="fleur f-bg2" src="./assets/img/fleurs-bouquet-hd.webp" alt="">
   <img class="fleur f-bd" src="./assets/img/fleurs-bouquet-hd.webp" alt="">
   <img class="fleur f-bd2" src="./assets/img/fleurs-tige-hd.webp" alt="">
+</div>
+
+<!-- Accueil plein écran -->
+<section class="hero-plein" aria-labelledby="titre-accueil">
+  <img class="chateau-fond" src="./assets/img/chateau-face.webp" srcset="./assets/img/chateau-face-768.webp 768w, ./assets/img/chateau-face.webp 1536w" sizes="(min-width: 900px) min(1180px, 88vw), 150vw" alt="Aquarelle du Petit Château de Seicheprey, lieu de la réception" width="1536" height="1024">
   <div class="hero-centre">
     <h1 class="manuscrit titre-hero" id="titre-accueil">Maëlle <span class="esperluette">&amp;</span> Raphaël</h1>
     <img class="separateur" src="./assets/img/separateur.svg" alt="">
