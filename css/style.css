@@ -342,18 +342,7 @@ body.menu-ouvert { overflow: hidden; }
   max-width: 300px;
   height: auto;
   margin-top: 26px;
-  /* Coins incurvés vers l'intérieur, comme les encarts */
-  --r: 26px;
-  -webkit-mask:
-    radial-gradient(circle at 0 0, #0000 var(--r), #000 calc(var(--r) + .5px)) top left / 51% 51% no-repeat,
-    radial-gradient(circle at 100% 0, #0000 var(--r), #000 calc(var(--r) + .5px)) top right / 51% 51% no-repeat,
-    radial-gradient(circle at 0 100%, #0000 var(--r), #000 calc(var(--r) + .5px)) bottom left / 51% 51% no-repeat,
-    radial-gradient(circle at 100% 100%, #0000 var(--r), #000 calc(var(--r) + .5px)) bottom right / 51% 51% no-repeat;
-  mask:
-    radial-gradient(circle at 0 0, #0000 var(--r), #000 calc(var(--r) + .5px)) top left / 51% 51% no-repeat,
-    radial-gradient(circle at 100% 0, #0000 var(--r), #000 calc(var(--r) + .5px)) top right / 51% 51% no-repeat,
-    radial-gradient(circle at 0 100%, #0000 var(--r), #000 calc(var(--r) + .5px)) bottom left / 51% 51% no-repeat,
-    radial-gradient(circle at 100% 100%, #0000 var(--r), #000 calc(var(--r) + .5px)) bottom right / 51% 51% no-repeat;
+  border-radius: 14px;
 }
 
 .deroulement { padding: 30px 6px 28px; }
