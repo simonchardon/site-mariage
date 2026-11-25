@@ -665,6 +665,32 @@ legend { padding: 0; margin-bottom: 8px; }
   .liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
   .liseret-jaune { --liseret: url('../assets/cadres/jaune.svg'); }
   .liseret-bleu  { --liseret: url('../assets/cadres/bleu.svg'); }
+
+  /* Ornements propres à chaque couleur, comme sur le faire-part :
+     sable = arches en haut et en bas, bleu = arche en haut, rose = encoches sur les côtés. */
+  .liseret-sable::after,
+  .liseret-bleu::after,
+  .liseret-rose::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -44px -20px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  .liseret-sable::after {
+    background-image: url('../assets/cadres/arche-haut-sable.svg'), url('../assets/cadres/arche-bas-sable.svg');
+    background-position: top center, bottom center;
+  }
+  .liseret-bleu::after {
+    background-image: url('../assets/cadres/arche-haut-bleu.svg');
+    background-position: top center;
+  }
+  .liseret-rose::after {
+    inset: -20px;
+    background-image: url('../assets/cadres/encoche-g-rose.svg'), url('../assets/cadres/encoche-d-rose.svg');
+    background-position: left center, right center;
+  }
   .menu-mobile .carte::before { content: none; }
   .carte--etroite { max-width: 820px; }
 
