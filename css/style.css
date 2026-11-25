@@ -1016,7 +1016,7 @@ legend { padding: 0; margin-bottom: 8px; }
 @media (max-width: 899px) {
   /* Le château suit le texte au lieu d'être en fond : plus de chevauchement,
      quelle que soit la hauteur de l'écran */
-  .hero-plein { flex-direction: column; align-items: center; justify-content: center; padding-bottom: 24px; }
+  .hero-plein { flex-direction: column; align-items: center; justify-content: flex-start; min-height: 0; padding-top: 28px; padding-bottom: 24px; }
   .hero-plein .chateau-fond {
     position: static;
     order: 2;
