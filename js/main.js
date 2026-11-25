@@ -87,12 +87,18 @@
       if (animation) cancelAnimationFrame(animation);
       var depart = window.scrollY, distance = y - depart;
       if (Math.abs(distance) < 2) { enCours = false; return; }
-      var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null;
+      var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null, courbe = adoucir;
+      // Passage entre l'accueil et le premier encart : plus lent et progressif,
+      // pour laisser le temps de voir le château grossir et le titre s'effacer
+      if (Math.min(depart, y) < etapes[0].offsetHeight * 0.85) {
+        duree = 1700;
+        courbe = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+      }
       enCours = true;
       var pas = function (t) {
         if (debut === null) debut = t;
         var p = Math.min(1, (t - debut) / duree);
-        window.scrollTo({ top: depart + distance * adoucir(p), behavior: 'instant' });
+        window.scrollTo({ top: depart + distance * courbe(p), behavior: 'instant' });
         if (p < 1) animation = requestAnimationFrame(pas);
         else { enCours = false; animation = null; }
       };
