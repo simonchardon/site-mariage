@@ -184,6 +184,24 @@ body.menu-ouvert { overflow: hidden; }
   text-align: center;
 }
 
+/* Liseré façon faire-part aussi en mobile (version plus fine du cadre desktop) */
+.carte::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  border: 34px solid transparent;
+  border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 fill / 34px stretch;
+  filter: drop-shadow(0 4px 10px rgba(95, 81, 69, 0.05));
+  pointer-events: none;
+}
+.liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
+.liseret-jaune { --liseret: url('../assets/cadres/jaune.svg'); }
+.liseret-bleu  { --liseret: url('../assets/cadres/bleu.svg'); }
+.menu-mobile .carte::before { content: none; }
+.contenu .carte { padding-left: 10px; padding-right: 10px; }
+.titre-l { line-height: 0.9; }
+
 .separateur-section {
   width: 150px;
   opacity: 0.9;
@@ -256,7 +274,7 @@ body.menu-ouvert { overflow: hidden; }
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 64px 20px 0;
+  padding: 44px 20px 0;
   text-align: center;
 }
 /* Château en fond, ancré en bas et fondu vers le haut pour laisser respirer le titre */
@@ -265,7 +283,7 @@ body.menu-ouvert { overflow: hidden; }
   z-index: -2;
   left: 50%;
   bottom: 0;
-  width: 150%;
+  width: 128%;
   max-width: none;
   transform: translateX(-50%);
   opacity: 0.9;
@@ -274,8 +292,8 @@ body.menu-ouvert { overflow: hidden; }
   pointer-events: none;
 }
 .hero-centre { display: flex; flex-direction: column; align-items: center; }
-.titre-hero { font-size: 76px; line-height: 0.95; }
-.titre-hero .esperluette { display: block; font-size: 0.7em; margin: 4px 0; }
+.titre-hero { font-size: 68px; line-height: 1.05; }
+.titre-hero .esperluette { font-size: 0.75em; margin-right: 0.08em; }
 .hero-plein .separateur { width: 160px; margin: 18px 0 12px; }
 .hero-plein .date { font-size: 20px; letter-spacing: 0.08em; color: var(--titre); }
 
@@ -290,7 +308,6 @@ body.menu-ouvert { overflow: hidden; }
 .fleur { position: absolute; pointer-events: none; height: auto; }
 .f-mg, .f-md, .f-bg2, .f-bd2 { display: none; }
 /* En mobile les cartes passent devant les fleurs : fond opaque pour garder le texte lisible */
-.page-accueil .contenu .carte { background: var(--fond); border-radius: 24px; }
 .page-accueil .contenu .deco { display: none; }
 .page-accueil .hero-plein { z-index: 0; }
 /* Chaque fleur est placée par le pied de sa tige (--bx/--by, en fraction de l'image)
@@ -770,13 +787,13 @@ legend { padding: 0; margin-bottom: 8px; }
   .hero-plein { min-height: calc(100svh - 76px); padding: 7vh 200px 0; }
   .chateau-fond { width: min(1180px, 88vw, 105vh); }
   .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
-  .titre-hero .esperluette { display: inline; font-size: 0.8em; margin: 0 0.1em; }
+  .titre-hero .esperluette { font-size: 0.8em; margin: 0 0.1em; }
+  .mobile-seul { display: none; }
   .hero-plein .separateur { width: 240px; margin: 20px 0 14px; }
   .hero-plein .date { font-size: 26px; }
 
   .cadre-fleuri { top: 76px; }
   .f-mg, .f-md, .f-bg2, .f-bd2 { display: block; }
-  .page-accueil .contenu .carte { background: none; }
   .f-hg, .f-hd { --w: clamp(230px, 20vw, 320px); }
   .f-mg, .f-md { --w: clamp(110px, 9vw, 150px); --ay: 58%; }
   .f-mg { --ax: -6px; --t: rotate(72deg); }
