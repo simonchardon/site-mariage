@@ -342,7 +342,15 @@ body.menu-ouvert { overflow: hidden; }
   max-width: 300px;
   height: auto;
   margin-top: 26px;
-  border-radius: 14px;
+  /* Bords fondus dans le fond crème : pas de cadre, la photo s'incruste */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 16%, #000 84%, transparent),
+    linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 16%, #000 84%, transparent),
+    linear-gradient(to bottom, transparent, #000 16%, #000 84%, transparent);
+  mask-composite: intersect;
 }
 
 .deroulement { padding: 30px 6px 28px; }
