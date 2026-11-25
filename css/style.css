@@ -23,8 +23,6 @@
   --filet-entete: #e6dfd5;
   --placeholder: #968a7e;
   --champ: #ffffff;
-  --carte-fond: #fcf9f4;
-  --carte-bord: #efe7dc;
 
   --manuscrit: 'Milton Two', cursive;
   --serif: 'Cardo', Georgia, serif;
@@ -652,17 +650,21 @@ legend { padding: 0; margin-bottom: 8px; }
 
   .carte { max-width: 1000px; }
 
-  /* Fond de carte visible en desktop : la zone de contenu (hors bordure transparente)
-     devient une carte claire, les fleurs viennent déborder sur ses coins. */
+  /* Liseré façon faire-part en desktop : filet fin coloré aux coins incurvés,
+     dessiné en 9-slice pour que les coins ne se déforment pas. */
   .carte::before {
     content: "";
     position: absolute;
     z-index: -2;
-    inset: 0;
-    border-radius: 28px;
-    background: var(--carte-fond);
-    border: 1px solid var(--carte-bord);
+    inset: -20px;
+    border: 50px solid transparent;
+    border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 / 50px stretch;
+    opacity: 0.75;
+    pointer-events: none;
   }
+  .liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
+  .liseret-jaune { --liseret: url('../assets/cadres/jaune.svg'); }
+  .liseret-bleu  { --liseret: url('../assets/cadres/bleu.svg'); }
   .menu-mobile .carte::before { content: none; }
   .carte--etroite { max-width: 820px; }
 
