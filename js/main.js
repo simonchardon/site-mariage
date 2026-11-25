@@ -69,18 +69,19 @@
       });
       return meilleur;
     };
-    var adoucir = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    // Démarre tout de suite puis freine en douceur : la page réagit dès le geste
+    var adoucir = function (t) { return 1 - Math.pow(1 - t, 4); };
     var allerA = function (y) {
       var depart = window.scrollY, distance = y - depart;
       if (Math.abs(distance) < 2) return;
-      var duree = Math.min(1100, 650 + Math.abs(distance) * 0.35), debut = null;
+      var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null;
       enCours = true;
       var pas = function (t) {
         if (debut === null) debut = t;
         var p = Math.min(1, (t - debut) / duree);
         window.scrollTo({ top: depart + distance * adoucir(p), behavior: 'instant' });
         if (p < 1) requestAnimationFrame(pas);
-        else { enCours = false; verrouJusqua = performance.now() + 350; }
+        else { enCours = false; verrouJusqua = performance.now() + 180; }
       };
       requestAnimationFrame(pas);
     };
@@ -114,9 +115,9 @@
       var delta = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
       var sens = delta > 0 ? 1 : -1;
       if (defilerDansEncart(sens, delta)) { verrouJusqua = 0; cumul = 0; return; }
-      if (maintenant < verrouJusqua) { verrouJusqua = maintenant + 200; return; } // inertie du pavé tactile
+      if (maintenant < verrouJusqua) { verrouJusqua = maintenant + 140; return; } // inertie du pavé tactile
       cumul += delta;
-      if (Math.abs(cumul) > 40) { cumul = 0; etapeSuivante(sens); }
+      if (Math.abs(cumul) > 15) { cumul = 0; etapeSuivante(sens); }
     }, { passive: false });
 
     document.addEventListener('keydown', function (e) {
