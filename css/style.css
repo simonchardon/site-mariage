@@ -760,6 +760,13 @@ legend { padding: 0; margin-bottom: 8px; }
     background-image: url('../assets/cadres/arche-haut-bleu.svg');
     background-position: top center;
   }
+  /* Encoches découpées pour de vrai dans le fond : on voit ce qu'il y a derrière (château) */
+  .liseret-rose::before {
+    -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 16px, #000 16.5px), radial-gradient(circle at 100% 50%, transparent 16px, #000 16.5px);
+    -webkit-mask-composite: source-in;
+    mask-image: radial-gradient(circle at 0 50%, transparent 16px, #000 16.5px), radial-gradient(circle at 100% 50%, transparent 16px, #000 16.5px);
+    mask-composite: intersect;
+  }
   .liseret-rose::after {
     inset: -20px;
     background-image: url('../assets/cadres/encoche-g-rose.svg'), url('../assets/cadres/encoche-d-rose.svg');
@@ -794,8 +801,6 @@ legend { padding: 0; margin-bottom: 8px; }
     will-change: transform, opacity;
   }
   .page-accueil .hero-centre { will-change: transform, opacity; }
-  /* Fond crème sous le texte des encarts pour rester lisible devant le château */
-  .page-accueil .contenu .carte { background-color: color-mix(in srgb, var(--fond) 94%, transparent); background-clip: padding-box; }
   .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
   .titre-hero .esperluette { font-size: 0.8em; margin: 0 0.1em; }
   .mobile-seul { display: none; }
