@@ -247,11 +247,34 @@ body.menu-ouvert { overflow: hidden; }
    Accueil
    -------------------------------------------------------------------------- */
 
-.hero { padding: 36px 10px 30px; }
-.hero-texte { display: flex; flex-direction: column; align-items: center; }
-.hero .separateur { width: 160px; margin: 16px 0 12px; }
-.hero .date { font-size: 22px; letter-spacing: 0.06em; color: var(--titre); }
-.hero .chateau { width: 100%; max-width: 320px; margin-top: 24px; }
+/* Accueil plein écran : titre, château et fleurs qui encadrent toute la page */
+.hero-plein {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: calc(100svh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 20px 96px;
+  text-align: center;
+}
+.hero-centre { display: flex; flex-direction: column; align-items: center; }
+.titre-hero { font-size: 76px; line-height: 0.95; }
+.titre-hero .esperluette { display: block; font-size: 0.7em; margin: 4px 0; }
+.hero-plein .separateur { width: 160px; margin: 18px 0 12px; }
+.hero-plein .date { font-size: 20px; letter-spacing: 0.08em; color: var(--titre); }
+.hero-plein .chateau { width: 100%; max-width: 300px; margin-top: 22px; }
+
+.fleur { position: absolute; z-index: -1; pointer-events: none; height: auto; }
+.f-hg  { width: 150px; left: -34px;  top: -30px; }
+.f-hd  { width: 150px; right: -34px; top: -30px; transform: scaleX(-1); }
+.f-mg  { width: 62px;  left: -16px;  top: 44%; transform: rotate(14deg); }
+.f-md  { width: 62px;  right: -14px; top: 40%; transform: rotate(-12deg); }
+.f-bg  { width: 78px;  left: -6px;   bottom: -22px; transform: rotate(-16deg); }
+.f-bg2 { width: 66px;  left: 50px;   bottom: -36px; transform: rotate(10deg); }
+.f-bd  { width: 92px;  right: 8px;   bottom: -14px; }
+.f-bd2 { width: 64px;  right: -16px; bottom: -12px; transform: rotate(18deg); }
 
 .invites { padding: 30px 8px 26px; }
 .invites .separateur { width: 170px; margin: 10px 0 18px; }
@@ -707,17 +730,22 @@ legend { padding: 0; margin-bottom: 8px; }
   .deco--desktop { display: block; }
   .deco--mobile { display: none; }
 
-  /* Accueil */
-  .hero {
-    padding: 48px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px;
-    align-items: center;
-  }
-  .hero .separateur { width: 220px; margin: 22px 0 16px; }
-  .hero .date { font-size: 28px; }
-  .hero .chateau { max-width: 440px; margin-top: 0; justify-self: center; }
+  /* Accueil plein écran */
+  .hero-plein { min-height: calc(100svh - 76px); padding: 56px 200px 64px; }
+  .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
+  .titre-hero .esperluette { display: inline; font-size: 0.8em; margin: 0 0.1em; }
+  .hero-plein .separateur { width: 240px; margin: 20px 0 14px; }
+  .hero-plein .date { font-size: 26px; }
+  .hero-plein .chateau { max-width: min(440px, 34vh * 1.5); margin-top: 26px; }
+
+  .f-hg  { width: clamp(230px, 20vw, 320px); left: -60px;  top: -50px; }
+  .f-hd  { width: clamp(230px, 20vw, 320px); right: -60px; top: -50px; }
+  .f-mg  { width: clamp(110px, 9vw, 150px);  left: 2vw;    top: 46%; }
+  .f-md  { width: clamp(110px, 9vw, 150px);  right: 2vw;   top: 42%; }
+  .f-bg  { width: clamp(130px, 11vw, 170px); left: 4vw;    bottom: -40px; }
+  .f-bg2 { width: clamp(110px, 9vw, 140px);  left: calc(4vw + 120px); bottom: -60px; }
+  .f-bd  { width: clamp(150px, 12vw, 190px); right: 9vw;   bottom: -30px; }
+  .f-bd2 { width: clamp(110px, 9vw, 140px);  right: 2vw;   bottom: -30px; }
 
   .invites { padding: 44px 100px 40px; }
   .invites .separateur { width: 220px; margin: 12px 0 22px; }
