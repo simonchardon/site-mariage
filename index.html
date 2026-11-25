@@ -4,43 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Maquettes — Maëlle &amp; Raphaël</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&amp;display=swap">
-<link rel="stylesheet" href="css/style.css">
 <style>
-  .versions { display: grid; gap: 18px; width: 100%; max-width: 820px; }
-  .version { padding: 26px 20px; border: 1px solid var(--filet); border-radius: 14px; background: var(--fond); }
-  .version.v3 { --fond: #faf6ef; }
-  .version h2 { font-size: 52px; }
-  .version p { margin: 8px 0 16px; }
-  .liens { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-  @media (min-width: 900px) { .versions { grid-template-columns: 1fr 1fr; gap: 32px; } }
+  @font-face { font-family: 'Milton Two'; src: url('assets/fonts/milton-two.otf') format('opentype'); font-display: swap; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: #f3eee6;
+    color: #6b5a4b;
+    font-family: 'Milton Two', cursive;
+  }
+  main { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; }
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 56px;
+    line-height: 1;
+  }
+  img {
+    display: block;
+    width: min(260px, 80vw);
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(95, 81, 69, 0.18);
+    transition: transform 0.2s;
+  }
+  a:hover img, a:focus-visible img { transform: translateY(-6px); }
+  a:focus-visible { outline: none; }
+  a:focus-visible img { outline: 3px solid #a9d6ec; outline-offset: 4px; }
 </style>
 </head>
 <body>
-<main class="contenu">
-  <section class="carte carte--etroite" style="padding: 26px 8px 10px">
-    <img src="assets/img/fleurs-couronne.webp" alt="" style="width: 200px">
-    <h1 class="manuscrit titre-l">Maëlle &amp; Raphaël</h1>
-    <p class="italique" style="margin-top: 10px">Maquettes HTML/CSS du site faire-part</p>
-  </section>
-  <div class="versions">
-    <section class="version carte">
-      <h2 class="manuscrit">Version 2</h2>
-      <p>Fond blanc pur</p>
-      <div class="liens">
-        <a class="bouton" href="v2/index.html">Voir la V2</a>
-      </div>
-    </section>
-    <section class="version v3 carte">
-      <h2 class="manuscrit">Version 3</h2>
-      <p>Fond blanc cassé</p>
-      <div class="liens">
-        <a class="bouton" href="v3/index.html">Voir la V3</a>
-      </div>
-    </section>
-  </div>
+<main>
+  <a href="v2/index.html">
+    <img src="assets/apercus/v2.webp" alt="Aperçu de la version 2, fond blanc" width="780" height="1560">
+    V2
+  </a>
+  <a href="v3/index.html">
+    <img src="assets/apercus/v3.webp" alt="Aperçu de la version 3, fond blanc cassé" width="780" height="1560">
+    V3
+  </a>
 </main>
 </body>
 </html>
