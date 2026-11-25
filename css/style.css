@@ -47,6 +47,13 @@ body {
 img { max-width: 100%; height: auto; }
 
 a { color: var(--lien); }
+/* Liens de texte : pas de soulignement classique, un filet doré comme les séparateurs */
+.contenu a:not(.bouton):not(.bouton-contour), .retour, .lien-bouton {
+  text-decoration: none;
+  padding-bottom: 9px;
+  background: url('../assets/img/soulignement.svg') center bottom / 100% 8px no-repeat;
+}
+.contenu a:not(.bouton):not(.bouton-contour):hover, .retour:hover, .lien-bouton:hover { color: var(--lien-survol); filter: brightness(.95); }
 a:hover { color: var(--lien-survol); }
 
 :focus-visible { outline: 2px solid var(--texte-bouton); outline-offset: 3px; }
@@ -653,7 +660,6 @@ legend { padding: 0; margin-bottom: 8px; }
   font-size: 16px;
   font-style: italic;
   color: var(--lien);
-  text-decoration: underline;
   cursor: pointer;
 }
 
