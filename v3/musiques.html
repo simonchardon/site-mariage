@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr" class="theme-v3">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vos musiques — Maëlle &amp; Raphaël</title>
+<meta name="description" content="Mariage de Maëlle et Raphaël le 25 septembre 2027 : programme, infos pratiques et réponse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<header class="entete">
+  <a class="logo" href="index.html" aria-label="Accueil — Maëlle et Raphaël">M &amp; R</a>
+  <nav class="nav-desktop" aria-label="Navigation principale">
+    <a href="index.html">ACCUEIL</a>
+    <a href="musiques.html" aria-current="page">VOS MUSIQUES</a>
+    <a class="bouton" href="rsvp.html">RÉPONSE</a>
+  </nav>
+  <button class="bouton-menu" type="button" aria-expanded="false" aria-controls="menu-mobile" aria-label="Ouvrir le menu">
+    <svg class="icone-ouvrir" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+    <svg class="icone-fermer" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</header>
+
+<div class="menu-mobile" id="menu-mobile" hidden>
+  <nav class="carte" aria-label="Menu">
+    <img class="ornement" src="../assets/img/fleurs-couronne.webp" alt="">
+    <a class="lien-menu" href="index.html">Accueil</a>
+    <img class="separateur" src="../assets/img/separateur.svg" alt="">
+    <a class="lien-menu" href="musiques.html" aria-current="page">Vos musiques</a>
+    <a class="bouton" href="rsvp.html">Réponse</a>
+    <p class="manuscrit pied-menu">Maëlle &amp; Raphaël</p>
+    <p class="date-menu">LE 25 SEPTEMBRE 2027</p>
+  </nav>
+</div>
+
+<main class="contenu contenu--musiques">
+  <div class="grille-musiques">
+    <section class="carte carte-musiques">
+      <img class="guirlande" src="../assets/img/fleurs-guirlande.webp" alt="">
+      <h1 class="manuscrit">Vos musiques</h1>
+      <p class="intro">Quelle chanson vous fera à coup sûr monter sur la piste ? Cherchez-la et ajoutez-la à votre sélection.</p>
+
+      <form class="formulaire" id="form-musiques">
+        <div class="champ">
+          <label class="petites-caps" for="prenom">Votre prénom</label>
+          <input class="saisie" id="prenom" name="prenom" type="text" placeholder="Ex. Julie" autocomplete="given-name">
+        </div>
+
+        <div class="champ">
+          <label class="petites-caps" for="recherche">Rechercher une chanson</label>
+          <div class="recherche">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7d664f" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="recherche" type="search" placeholder="Titre ou artiste…" autocomplete="off" aria-controls="resultats">
+          </div>
+          <ul class="resultats" id="resultats" aria-live="polite" hidden></ul>
+          <p class="source">Résultats fournis par [iTunes / Deezer / Spotify]</p>
+        </div>
+
+        <div class="champ">
+          <p class="petites-caps">Ma sélection (<span id="nb-selection">0</span>)</p>
+          <ul class="selection" id="selection"></ul>
+        </div>
+
+        <button class="bouton" type="submit" style="align-self: center">Envoyer mes propositions</button>
+      </form>
+
+      <div class="envoye" id="envoye" hidden>
+        <p class="manuscrit grand-merci">Merci !</p>
+        <p>Vos chansons sont bien notées. Rendez-vous sur la piste de danse le 25 septembre 2027 !</p>
+        <button class="lien-bouton" type="button" id="encore">Proposer d'autres chansons</button>
+      </div>
+    </section>
+
+    <section class="carte carte-proposees">
+      <div class="tete">
+        <h2 class="manuscrit">Déjà proposées</h2>
+        <p class="compte"><span id="nb-proposees">0</span> chansons</p>
+      </div>
+      <table class="tableau">
+        <thead><tr><th scope="col">TITRE</th><th scope="col">ARTISTE</th><th scope="col">PROPOSÉE PAR</th></tr></thead>
+        <tbody id="proposees"></tbody>
+      </table>
+    </section>
+
+    <a class="retour" href="index.html">← Retour au site</a>
+  </div>
+</main>
+</body>
+</html>

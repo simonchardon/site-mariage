@@ -1,0 +1,820 @@
+/* ==========================================================================
+   Site faire-part — Maëlle & Raphaël
+   Feuille de style commune aux maquettes V2 (blanc pur) et V3 (blanc cassé).
+   Mobile d'abord ; la mise en page desktop s'active à partir de 900px.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Milton Two';
+  src: url('../assets/fonts/milton-two.otf') format('opentype');
+  font-display: swap;
+}
+
+:root {
+  --fond: #ffffff;          /* V2 : blanc pur */
+  --texte: #5f5145;
+  --titre: #6b5a4b;
+  --lien: #7d664f;
+  --lien-survol: #5f4c3a;
+  --bouton: #a9d6ec;
+  --texte-bouton: #2c4a5c;
+  --bordure: #cfc4b6;
+  --filet: #d8cfc3;
+  --filet-entete: #e6dfd5;
+  --placeholder: #968a7e;
+  --champ: #ffffff;
+
+  --manuscrit: 'Milton Two', cursive;
+  --serif: 'Cardo', Georgia, serif;
+
+  --cadre: 28px;            /* bordure transparente des cartes (marge des décors) */
+}
+
+/* V3 : même maquette, fond blanc cassé */
+html.theme-v3 { --fond: #faf6ef; }
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; }
+
+a { color: var(--lien); }
+a:hover { color: var(--lien-survol); }
+
+:focus-visible { outline: 2px solid var(--texte-bouton); outline-offset: 3px; }
+
+p { margin: 0; }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Typographie
+   -------------------------------------------------------------------------- */
+
+.manuscrit {
+  font-family: var(--manuscrit);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--titre);
+}
+
+h1, h2 { margin: 0; }
+.titre-xl { font-size: 80px; }
+.titre-l  { font-size: 67px; }
+.titre-m  { font-size: 46px; }
+.signature { font-size: 46px; margin-top: 14px; }
+
+.petites-caps {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.italique { font-style: italic; }
+
+/* --------------------------------------------------------------------------
+   En-tête et navigation
+   -------------------------------------------------------------------------- */
+
+.entete {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--fond);
+  border-bottom: 1px solid var(--filet-entete);
+}
+
+.logo {
+  font-family: var(--manuscrit);
+  font-size: 39px;
+  line-height: 1;
+  color: var(--titre);
+  text-decoration: none;
+}
+.logo:hover { color: var(--titre); }
+
+.nav-desktop { display: none; }
+
+.bouton-menu {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--titre);
+  cursor: pointer;
+}
+.bouton-menu .icone-fermer { display: none; }
+.bouton-menu[aria-expanded="true"] .icone-ouvrir { display: none; }
+.bouton-menu[aria-expanded="true"] .icone-fermer { display: block; }
+
+/* Menu plein écran (mobile) */
+.menu-mobile {
+  position: fixed;
+  inset: 56px 0 0 0;
+  z-index: 15;
+  display: flex;
+  padding: 18px 14px 24px;
+  background: var(--fond);
+  overflow-y: auto;
+}
+.menu-mobile[hidden] { display: none; }
+
+.menu-mobile .carte {
+  flex-grow: 1;
+  gap: 6px;
+  padding: 30px 8px 28px;
+}
+.menu-mobile .ornement { width: 200px; margin-bottom: 18px; }
+.menu-mobile .lien-menu {
+  display: block;
+  padding: 12px 24px;
+  font-family: var(--manuscrit);
+  font-size: 51px;
+  line-height: 1;
+  color: var(--titre);
+  text-decoration: none;
+}
+.menu-mobile .separateur { width: 150px; margin: 4px 0; }
+.menu-mobile .bouton { margin-top: 22px; padding: 14px 36px; font-size: 16px; letter-spacing: 0.14em; }
+.menu-mobile .pied-menu { margin-top: auto; padding-top: 24px; font-size: 41px; }
+.menu-mobile .date-menu { margin-top: 6px; font-size: 15px; letter-spacing: 0.04em; }
+
+body.menu-ouvert { overflow: hidden; }
+
+/* --------------------------------------------------------------------------
+   Mise en page
+   -------------------------------------------------------------------------- */
+
+.contenu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 14px 32px;
+  overflow-x: clip;
+}
+
+.carte {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  border: var(--cadre) solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.separateur-section {
+  width: 150px;
+  opacity: 0.9;
+}
+
+.separateur { display: block; }
+
+/* Décors floraux : position mobile par défaut, desktop via les variables --d* */
+.deco {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: var(--w);
+  left: var(--l, auto);
+  right: var(--r, auto);
+  top: var(--t, auto);
+  bottom: var(--b, auto);
+  transform: var(--tr, none);
+}
+.deco--desktop { display: none; }
+
+.retour { font-style: italic; }
+
+.paragraphes { display: flex; flex-direction: column; gap: 10px; }
+
+/* --------------------------------------------------------------------------
+   Boutons
+   -------------------------------------------------------------------------- */
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--bouton);
+  color: var(--texte-bouton);
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.bouton:hover { color: var(--texte-bouton); filter: brightness(0.96); }
+
+.bouton-contour {
+  padding: 10px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--bouton);
+  color: var(--texte-bouton);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+.bouton-contour:hover { color: var(--texte-bouton); background: color-mix(in srgb, var(--bouton) 25%, transparent); }
+
+/* --------------------------------------------------------------------------
+   Accueil
+   -------------------------------------------------------------------------- */
+
+.hero { padding: 36px 10px 30px; }
+.hero-texte { display: flex; flex-direction: column; align-items: center; }
+.hero .separateur { width: 160px; margin: 16px 0 12px; }
+.hero .date { font-size: 22px; letter-spacing: 0.06em; color: var(--titre); }
+.hero .chateau { width: 100%; max-width: 320px; margin-top: 24px; }
+
+.invites { padding: 30px 8px 26px; }
+.invites .separateur { width: 170px; margin: 10px 0 18px; }
+
+.histoire { padding: 30px 8px 30px; }
+.histoire-texte { display: flex; flex-direction: column; align-items: center; }
+.histoire .guirlande { width: 200px; margin-bottom: 4px; }
+.histoire .sous-titre { margin: 8px 0 18px; font-style: italic; font-size: 17px; }
+
+.polaroid {
+  margin: 26px 0 0;
+  padding: 10px 10px 34px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(95, 81, 69, 0.18);
+  transform: rotate(-2deg);
+}
+.polaroid img { display: block; width: 240px; }
+.polaroid figcaption { margin-top: 8px; font-size: 30px; }
+
+.deroulement { padding: 30px 6px 28px; }
+.deroulement .ornement { width: 190px; margin-bottom: 4px; }
+.deroulement .separateur { width: 170px; margin: 14px 0 20px; }
+
+.etapes {
+  list-style: none;
+  margin: 0; padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  text-align: left;
+}
+.etape { display: flex; align-items: center; gap: 14px; }
+.etape img { width: 100px; flex-shrink: 0; }
+.etape p { line-height: 1.45; }
+.etape .adresse { font-size: 14px; }
+.deroulement .conseil { margin-top: 22px; font-style: italic; font-size: 15px; }
+
+.dress-code { padding: 30px 8px 26px; }
+.palette {
+  list-style: none;
+  display: flex;
+  gap: 14px;
+  margin: 16px 0 14px;
+  padding: 0;
+}
+.palette li {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--c);
+}
+.dress-code .ton { font-size: 18px; }
+
+.presence { padding: 30px 8px 30px; }
+.presence h2 { font-size: 60px; }
+.presence .rappel { margin-top: 16px; font-style: italic; }
+.presence .echeance { font-style: italic; font-weight: 700; font-size: 18px; }
+.presence .details { margin: 12px 0 22px; }
+
+.infos { padding: 30px 6px 26px; }
+.infos-liste {
+  width: 100%;
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.info + .info::before {
+  content: "";
+  display: block;
+  width: 60px; height: 1px;
+  margin: 0 auto 18px;
+  background: var(--filet);
+}
+.info h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+.contact { padding: 30px 6px 28px; }
+.contact .intro { margin: 8px 0 20px; }
+.contacts { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+.personne { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.personne .prenom { font-size: 48px; }
+.personne .actions { display: flex; gap: 10px; margin-top: 8px; }
+
+/* --------------------------------------------------------------------------
+   Formulaires (RSVP, musiques)
+   -------------------------------------------------------------------------- */
+
+.formulaire {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.champ { display: flex; flex-direction: column; gap: 6px; }
+.champ .aide { font-size: 14px; font-style: italic; }
+
+.saisie {
+  width: 100%;
+  font-family: inherit;
+  font-size: 17px;
+  color: var(--texte);
+  background: var(--champ);
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.saisie::placeholder { color: var(--placeholder); }
+textarea.saisie { min-height: 110px; resize: vertical; }
+
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend { padding: 0; margin-bottom: 8px; }
+
+.choix {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.choix input { position: absolute; opacity: 0; pointer-events: none; }
+.choix label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 13px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--bordure);
+  background: var(--champ);
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+.choix input:checked + label {
+  background: var(--bouton);
+  border-color: var(--bouton);
+  color: var(--texte-bouton);
+}
+.choix input:focus-visible + label { outline: 2px solid var(--texte-bouton); outline-offset: 2px; }
+
+.compteurs { display: flex; flex-direction: column; gap: 10px; }
+.compteur {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--champ);
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 6px 6px 6px 14px;
+}
+.compteur .libelle { font-size: 17px; line-height: 1.2; }
+.compteur small { font-size: 13px; font-style: italic; }
+.compteur .reglage { display: flex; align-items: center; gap: 2px; }
+.compteur button {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  border: 1px solid var(--bordure);
+  background: transparent;
+  color: var(--titre);
+  font-size: 20px;
+  cursor: pointer;
+}
+.compteur output { width: 34px; text-align: center; font-size: 20px; }
+
+.si-present { display: flex; flex-direction: column; gap: 20px; }
+.formulaire:has(#presence-non:checked) .si-present { display: none; }
+
+.pied-formulaire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-top: 4px;
+}
+.pied-formulaire .retour { order: 2; }
+
+/* --------------------------------------------------------------------------
+   RSVP / Merci
+   -------------------------------------------------------------------------- */
+
+.carte-rsvp { padding: 26px 6px 28px; }
+.carte-rsvp .ornement { width: 180px; }
+.carte-rsvp h1 { margin-top: 4px; font-size: 69px; }
+.carte-rsvp .rappel { margin-top: 10px; font-style: italic; }
+.carte-rsvp .echeance { font-style: italic; font-weight: 700; margin-bottom: 4px; }
+.carte-rsvp .foyer { font-size: 15px; margin-bottom: 22px; }
+
+.merci { padding: 26px 8px 28px; }
+.merci .ornement { width: 200px; }
+.merci h1 { margin-top: 4px; font-size: 83px; }
+.merci .confirmation { margin-top: 12px; font-size: 18px; font-weight: 700; }
+.merci .message { margin-top: 10px; }
+
+.danser { padding: 22px 8px 24px; }
+.danser .accroche { font-size: 46px; }
+.danser .message { margin: 10px 0 16px; }
+
+.manquer { padding: 30px 8px 30px; }
+.manquer .guirlande { width: 210px; }
+.manquer h1 { margin-top: 8px; font-size: 69px; }
+.manquer .separateur { width: 170px; margin: 14px 0 16px; }
+.manquer .confirmation { font-size: 18px; font-weight: 700; }
+.manquer .message { margin-top: 10px; }
+.manquer .modifier { margin-top: 22px; font-size: 15px; font-style: italic; }
+
+/* --------------------------------------------------------------------------
+   Musiques
+   -------------------------------------------------------------------------- */
+
+.grille-musiques { width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+
+.carte-musiques { padding: 26px 4px 26px; }
+.carte-musiques .guirlande { width: 190px; }
+.carte-musiques h1 { margin-top: 4px; font-size: 69px; }
+.carte-musiques .intro { margin: 10px 0 20px; font-style: italic; }
+.carte-musiques .formulaire { gap: 18px; }
+
+.recherche {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--champ);
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 0 8px 0 14px;
+}
+.recherche svg { flex-shrink: 0; }
+.recherche input {
+  flex-grow: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 17px;
+  color: var(--texte);
+  padding: 12px 0;
+}
+.recherche input::placeholder { color: var(--placeholder); }
+.recherche input:focus { outline: none; }
+.recherche:focus-within { outline: 2px solid var(--texte-bouton); outline-offset: 2px; }
+
+.resultats {
+  list-style: none;
+  margin: 0; padding: 0;
+  background: var(--champ);
+  border: 1px solid #e0d7cb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.resultats[hidden] { display: none; }
+.resultats li + li { border-top: 1px solid #f0ebe4; }
+.resultats .aucun { padding: 12px 14px; font-style: italic; }
+
+.morceau {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 8px 8px 10px;
+}
+.morceau .pochette {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--c);
+}
+.morceau .infos-morceau { flex-grow: 1; min-width: 0; line-height: 1.25; }
+.morceau .titre-morceau { font-weight: 700; font-size: 15px; }
+.morceau .artiste { font-size: 14px; font-style: italic; }
+.morceau .deja { margin-top: 2px; font-size: 12px; color: #8a6a66; }
+
+.bouton-ajout {
+  width: 44px; height: 44px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--bouton);
+  background: transparent;
+  color: var(--texte-bouton);
+  cursor: pointer;
+}
+.bouton-ajout[aria-pressed="true"] { background: var(--bouton); border-color: var(--bouton); }
+
+.source { font-size: 12px; text-align: center; font-style: italic; }
+
+.selection { display: flex; flex-direction: column; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.selection .vide {
+  padding: 14px;
+  border: 1px dashed var(--bordure);
+  border-radius: 10px;
+  text-align: center;
+  font-style: italic;
+}
+.selection .morceau {
+  padding: 6px 4px 6px 8px;
+  background: var(--champ);
+  border: 1px solid #e0d7cb;
+  border-radius: 10px;
+}
+.selection .pochette { width: 36px; height: 36px; }
+.selection .artiste { font-size: 13px; }
+.bouton-retirer {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 10px;
+  background: transparent;
+  color: var(--texte);
+  cursor: pointer;
+}
+
+.envoye { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.envoye[hidden] { display: none; }
+.envoye .grand-merci { font-size: 62px; }
+.lien-bouton {
+  margin-top: 6px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--lien);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.carte-proposees { padding: 24px 2px 22px; text-align: left; align-items: stretch; }
+.carte-proposees .tete {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 6px;
+  margin-bottom: 10px;
+}
+.carte-proposees h2 { font-size: 46px; }
+.carte-proposees .compte { font-size: 14px; font-style: italic; white-space: nowrap; }
+.tableau { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.tableau th {
+  padding: 8px 6px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-align: left;
+  border-bottom: 1px solid var(--filet);
+}
+.tableau td {
+  padding: 9px 6px;
+  font-size: 14px;
+  line-height: 1.3;
+  vertical-align: top;
+  border-top: 1px solid #efe9e1;
+  overflow-wrap: anywhere;
+}
+.tableau td:first-child { font-weight: 700; }
+.tableau td:nth-child(2) { font-style: italic; }
+
+/* ==========================================================================
+   Desktop (≥ 900px)
+   ========================================================================== */
+
+@media (min-width: 900px) {
+  :root { --cadre: 44px; }
+
+  body { font-size: 18px; line-height: 1.65; }
+
+  .titre-xl { font-size: 132px; line-height: 0.95; }
+  .titre-l  { font-size: 92px; }
+  .signature { font-size: 60px; margin-top: 16px; }
+
+  .entete { height: 76px; padding: 0 64px; }
+  .logo { font-size: 51px; }
+  .bouton-menu, .menu-mobile { display: none !important; }
+
+  .nav-desktop {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+  }
+  .nav-desktop a { color: var(--texte); text-decoration: none; }
+  .nav-desktop a[aria-current="page"]:not(.bouton) {
+    color: var(--titre);
+    border-bottom: 1px solid var(--titre);
+    padding-bottom: 2px;
+  }
+  .nav-desktop .bouton { padding: 11px 22px; font-size: 16px; color: var(--texte-bouton); }
+
+  .contenu { gap: 32px; padding: 48px 24px 64px; }
+
+  .carte { max-width: 1000px; }
+  .carte--etroite { max-width: 820px; }
+
+  .separateur-section { width: 230px; }
+
+  .deco {
+    width: var(--dw, var(--w));
+    left: var(--dl, auto);
+    right: var(--dr, auto);
+    top: var(--dt, auto);
+    bottom: var(--db, auto);
+    transform: var(--dtr, var(--tr, none));
+  }
+  .deco--desktop { display: block; }
+  .deco--mobile { display: none; }
+
+  /* Accueil */
+  .hero {
+    padding: 48px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+    align-items: center;
+  }
+  .hero .separateur { width: 220px; margin: 22px 0 16px; }
+  .hero .date { font-size: 28px; }
+  .hero .chateau { max-width: 440px; margin-top: 0; justify-self: center; }
+
+  .invites { padding: 44px 100px 40px; }
+  .invites .separateur { width: 220px; margin: 12px 0 22px; }
+  .paragraphes { gap: 8px; }
+
+  .histoire {
+    padding: 48px 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .histoire .guirlande { width: 220px; margin-bottom: 4px; }
+  .histoire .sous-titre { font-size: 20px; }
+  .polaroid { margin: 0; justify-self: center; padding: 12px 12px 44px; box-shadow: 0 8px 24px rgba(95, 81, 69, 0.18); }
+  .polaroid img { width: 320px; }
+  .polaroid figcaption { margin-top: 10px; font-size: 39px; }
+
+  .deroulement { padding: 44px 40px; }
+  .deroulement .ornement { width: 240px; }
+  .deroulement .separateur { width: 220px; margin: 16px 0 30px; }
+  .etapes {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    text-align: center;
+  }
+  .etape { flex-direction: column; gap: 12px; }
+  .etape img { width: auto; height: 96px; }
+  .etape p { line-height: 1.5; }
+  .etape .adresse { display: block; margin-top: 4px; font-size: 15px; }
+  .deroulement .conseil { margin-top: 28px; font-size: 16px; }
+
+  .dress-code { padding: 44px 40px 40px; }
+  .palette { gap: 18px; margin: 20px 0 16px; }
+  .palette li { width: 48px; height: 48px; }
+  .dress-code .ton { font-size: 22px; }
+
+  .presence { padding: 44px 40px; }
+  .presence h2 { font-size: 92px; }
+  .presence .rappel { margin-top: 18px; font-size: 20px; }
+  .presence .echeance { font-size: 22px; }
+  .presence .details { margin: 12px 0 26px; }
+  .presence .bouton { padding: 16px 32px; font-size: 16px; }
+
+  .infos { padding: 44px 40px 40px; }
+  .infos-liste {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  .info { padding: 0 22px; }
+  .info + .info { border-left: 1px solid var(--filet); }
+  .info + .info::before { display: none; }
+  .info h3 { margin-bottom: 6px; font-size: 16px; }
+
+  .contact { padding: 44px 40px; }
+  .contact .intro { margin: 8px 0 28px; }
+  .contacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
+  .personne + .personne { border-left: 1px solid var(--filet); }
+  .personne .prenom { font-size: 64px; }
+  .personne .actions { gap: 12px; margin-top: 10px; }
+  .bouton-contour { padding: 11px 20px; font-size: 15px; }
+
+  /* RSVP */
+  .carte-rsvp { padding: 36px 56px 44px; }
+  .carte-rsvp .ornement { width: 240px; }
+  .carte-rsvp h1 { font-size: 97px; }
+  .carte-rsvp .rappel { margin-top: 12px; }
+  .carte-rsvp .foyer { font-size: 16px; margin-bottom: 30px; }
+  .formulaire { gap: 24px; }
+  .petites-caps { font-size: 15px; }
+  .saisie { font-size: 18px; padding: 13px 16px; }
+  textarea.saisie { min-height: 120px; }
+  .champ .aide { font-size: 15px; }
+  .choix { gap: 12px; }
+  .choix label { padding: 15px 10px; font-size: 18px; }
+  .compteurs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .compteur { padding-left: 16px; }
+  .compteur .libelle { font-size: 18px; }
+  .compteur small { font-size: 14px; }
+  .compteur output { width: 36px; font-size: 21px; }
+  .si-present { gap: 24px; }
+  .pied-formulaire { flex-direction: row; justify-content: space-between; }
+  .pied-formulaire .retour { order: 0; }
+  .pied-formulaire .bouton { padding: 15px 30px; font-size: 16px; }
+
+  /* Merci */
+  .merci { padding: 34px 70px 38px; }
+  .merci .ornement { width: 250px; }
+  .merci h1 { font-size: 110px; }
+  .merci .confirmation { font-size: 21px; }
+  .merci .signature, .manquer .signature { font-size: 57px; margin-top: 14px; }
+
+  .danser {
+    padding: 26px 40px 28px;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+    text-align: left;
+  }
+  .danser .texte-danser { flex-grow: 1; }
+  .danser .accroche { font-size: 53px; }
+  .danser .message { margin: 6px 0 0; }
+  .danser .bouton { flex-shrink: 0; padding: 15px 26px; font-size: 16px; }
+
+  .manquer { padding: 44px 70px; }
+  .manquer .guirlande { width: 260px; }
+  .manquer h1 { margin-top: 10px; font-size: 101px; }
+  .manquer .separateur { width: 220px; margin: 16px 0 18px; }
+  .manquer .confirmation { font-size: 21px; }
+  .manquer .modifier { margin-top: 24px; font-size: 16px; }
+
+  /* Musiques */
+  .contenu--musiques { padding: 48px 120px; }
+  .grille-musiques {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    align-items: start;
+    max-width: 1200px;
+  }
+  .grille-musiques .retour { grid-column: 1 / -1; justify-self: center; }
+  .carte-musiques { padding: 30px 30px 34px; }
+  .carte-musiques h1 { font-size: 92px; }
+  .carte-musiques .petites-caps { font-size: 14px; }
+  .carte-musiques .saisie, .recherche input { font-size: 17px; }
+  .carte-proposees { padding: 30px 26px; }
+  .carte-proposees h2 { font-size: 64px; }
+  .tableau td { font-size: 16px; }
+}
+
+@media (min-width: 900px) and (max-width: 1240px) {
+  .contenu--musiques { padding: 48px 24px; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bouton, .bouton-contour, .choix label { transition: background-color 0.15s, filter 0.15s; }
+}
