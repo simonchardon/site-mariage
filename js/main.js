@@ -114,6 +114,15 @@
       if (sens < 0 && y > debutEl + 2) { window.scrollTo({ top: Math.max(debutEl, y + delta), behavior: 'instant' }); return true; }
       return false;
     };
+    // Espace sous le dernier encart (contact) pour qu'il puisse lui aussi être centré
+    var ajusterBas = function () {
+      var dernier = etapes[etapes.length - 1];
+      var dispo = window.innerHeight - hauteurEntete();
+      contenuAccueil.style.paddingBottom = Math.max(64, Math.round((dispo - dernier.offsetHeight) / 2)) + 'px';
+    };
+    ajusterBas();
+    window.addEventListener('resize', ajusterBas);
+    window.addEventListener('load', ajusterBas);
     // Les étapes, plus le bas de page s'il dépasse le dernier encart
     var position = function (i) {
       if (i < etapes.length) return cible(etapes[i]);
