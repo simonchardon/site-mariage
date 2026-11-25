@@ -24,6 +24,13 @@
     });
   }
 
+  /* ---------- Autres pages : ordre d'apparition des encarts ---------- */
+  if (!document.body.classList.contains('page-accueil')) {
+    document.querySelectorAll('.contenu .carte').forEach(function (carte, i) {
+      carte.style.setProperty('--i', i);
+    });
+  }
+
   /* ---------- Accueil : apparition des encarts au défilement ---------- */
   var contenuAccueil = document.querySelector('.page-accueil .contenu');
   var mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

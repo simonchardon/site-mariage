@@ -978,3 +978,33 @@ legend { padding: 0; margin-bottom: 8px; }
   from { opacity: 0; translate: 0 30px; }
   to   { opacity: .9; translate: 0 0; }
 }
+
+/* ==========================================================================
+   Transitions entre les pages et arrivée sur les autres pages
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Fondu enchaîné d'une page à l'autre (navigateurs récents ; ailleurs, changement direct) */
+  @view-transition { navigation: auto; }
+  .entete { view-transition-name: entete; }
+  ::view-transition-old(root) { animation: vt-sortie .35s ease both; }
+  ::view-transition-new(root) { animation: vt-entree .6s cubic-bezier(.2, .7, .2, 1) both; }
+
+  /* Arrivée : chaque encart monte en douceur, l'un après l'autre (--i posé par js/main.js) */
+  body:not(.page-accueil) .contenu .carte {
+    animation: monte .9s cubic-bezier(.2, .7, .2, 1) both;
+    animation-delay: calc(.1s + var(--i, 0) * .18s);
+  }
+  body:not(.page-accueil) .contenu .carte :is(.ornement, .guirlande) {
+    animation: fleur-pousse 1.2s cubic-bezier(.2, .7, .2, 1) both;
+    animation-delay: calc(.35s + var(--i, 0) * .18s);
+  }
+  body:not(.page-accueil) .contenu .deco {
+    animation: apparait-deco 1.4s ease-out both;
+    animation-delay: calc(.6s + var(--i, 0) * .18s);
+  }
+}
+
+@keyframes vt-sortie { to { opacity: 0; translate: 0 -12px; } }
+@keyframes vt-entree { from { opacity: 0; translate: 0 16px; } }
+@keyframes apparait-deco { from { opacity: 0; } }
