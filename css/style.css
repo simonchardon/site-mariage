@@ -293,14 +293,24 @@ body.menu-ouvert { overflow: hidden; }
 .page-accueil .contenu .carte { background: var(--fond); border-radius: 24px; }
 .page-accueil .contenu .deco { display: none; }
 .page-accueil .hero-plein { z-index: 0; }
-.f-hg  { width: 150px; left: -34px;  top: -30px; }
-.f-hd  { width: 150px; right: -34px; top: -30px; transform: scaleX(-1); }
-.f-mg  { width: 62px;  left: -16px;  top: 44%; transform: rotate(14deg); }
-.f-md  { width: 62px;  right: -14px; top: 40%; transform: rotate(-12deg); }
-.f-bg  { width: 78px;  left: -6px;   bottom: -22px; transform: rotate(-16deg); }
-.f-bg2 { width: 66px;  left: 50px;   bottom: -36px; transform: rotate(10deg); }
-.f-bd  { width: 92px;  right: 8px;   bottom: -14px; }
-.f-bd2 { width: 64px;  right: -16px; bottom: -12px; transform: rotate(18deg); }
+/* Chaque fleur est placée par le pied de sa tige (--bx/--by, en fraction de l'image)
+   sur un point du bord de l'écran (--ax/--ay), puis tournée autour de ce pied :
+   les branches semblent sortir du bord. */
+.fleur {
+  width: var(--w);
+  left: var(--ax);
+  top: var(--ay);
+  translate: calc(var(--bx) * -100%) calc(var(--by) * -100%);
+  transform-origin: calc(var(--bx) * 100%) calc(var(--by) * 100%);
+  transform: var(--t, none);
+}
+.f-hg, .f-hd { --bx: 0; --by: .81; --w: 112px; --ay: calc(var(--w) * .99 - 20px); }
+.f-hg { --ax: -4px; }
+.f-hd { --ax: calc(100% + 4px); --t: scaleX(-1); }
+.f-mg, .f-md, .f-bg2, .f-bd2 { --bx: .24; --by: .98; }
+.f-bg, .f-bd { --bx: .27; --by: .96; --w: 96px; --ay: calc(100% + 6px); }
+.f-bg { --ax: 22px; --t: rotate(18deg); }
+.f-bd { --ax: calc(100% - 22px); --t: scaleX(-1) rotate(18deg); }
 
 .invites { padding: 30px 8px 26px; }
 .invites .separateur { width: 170px; margin: 10px 0 18px; }
@@ -767,14 +777,16 @@ legend { padding: 0; margin-bottom: 8px; }
   .cadre-fleuri { top: 76px; }
   .f-mg, .f-md, .f-bg2, .f-bd2 { display: block; }
   .page-accueil .contenu .carte { background: none; }
-  .f-hg  { width: clamp(230px, 20vw, 320px); left: -60px;  top: -50px; }
-  .f-hd  { width: clamp(230px, 20vw, 320px); right: -60px; top: -50px; }
-  .f-mg  { width: clamp(110px, 9vw, 150px);  left: 2vw;    top: 46%; }
-  .f-md  { width: clamp(110px, 9vw, 150px);  right: 2vw;   top: 42%; }
-  .f-bg  { width: clamp(130px, 11vw, 170px); left: 4vw;    bottom: -40px; }
-  .f-bg2 { width: clamp(110px, 9vw, 140px);  left: calc(4vw + 120px); bottom: -60px; }
-  .f-bd  { width: clamp(150px, 12vw, 190px); right: 9vw;   bottom: -30px; }
-  .f-bd2 { width: clamp(110px, 9vw, 140px);  right: 2vw;   bottom: -30px; }
+  .f-hg, .f-hd { --w: clamp(230px, 20vw, 320px); }
+  .f-mg, .f-md { --w: clamp(110px, 9vw, 150px); --ay: 58%; }
+  .f-mg { --ax: -6px; --t: rotate(72deg); }
+  .f-md { --ax: calc(100% + 6px); --t: scaleX(-1) rotate(72deg); }
+  .f-bg, .f-bd { --w: clamp(140px, 12vw, 190px); }
+  .f-bg { --ax: 4vw; --t: rotate(14deg); }
+  .f-bd { --ax: calc(100% - 4vw); --t: scaleX(-1) rotate(14deg); }
+  .f-bg2, .f-bd2 { --w: clamp(110px, 9vw, 140px); --ay: calc(100% + 6px); }
+  .f-bg2 { --ax: calc(4vw + 150px); --t: rotate(32deg); }
+  .f-bd2 { --ax: calc(100% - 4vw - 150px); --t: scaleX(-1) rotate(32deg); }
 
   .invites { padding: 44px 100px 40px; }
   .invites .separateur { width: 220px; margin: 12px 0 22px; }
@@ -946,9 +958,6 @@ html:has(body.page-accueil) {
   .f-mg, .f-md { animation-delay: .5s !important; }
   .f-bg, .f-bd { animation-delay: .3s !important; }
   .f-bg2, .f-bd2 { animation-delay: .7s !important; }
-  .f-hg, .f-mg, .f-bg, .f-bg2 { transform-origin: left center; }
-  .f-hd, .f-md, .f-bd, .f-bd2 { transform-origin: right center; }
-  .f-hg, .f-hd { transform-origin: top center; }
 
   .hero-plein .titre-hero { animation: monte 1.4s cubic-bezier(.2, .7, .2, 1) .6s both; }
   .hero-plein .separateur { animation: deploie 1.1s cubic-bezier(.2, .7, .2, 1) 1.2s both; }
