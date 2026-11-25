@@ -434,16 +434,25 @@
       var course = Math.max(1, heroPlein.offsetHeight * 0.85);
       var p = Math.min(1, Math.max(0, window.scrollY / course));
       var e = p * p * (3 - 2 * p); // départ et arrivée en douceur
-      var echelle = 1 + 0.32 * e, montee = -0.1 * window.innerHeight;
+      var echelle = 1 + 0.32 * e, cy = -0.1 * window.innerHeight * e;
       if (mobileChateau.matches) {
-        // Mobile : à la fin du mouvement, le château est centré dans l'écran sous l'en-tête
+        // Mobile : au départ le château se place juste sous la date (pas de vide entre les deux),
+        // puis à la fin du mouvement il est centré dans l'écran sous l'en-tête
         var hEntete = document.querySelector('.entete') ? document.querySelector('.entete').offsetHeight : 0;
-        var hFinale = chateau.offsetHeight * 1.32;
+        var hChateau = chateau.offsetHeight;
+        var basTexte = 0, el = heroCentre;
+        while (el) { basTexte += el.offsetTop; el = el.offsetParent; }
+        basTexte += heroCentre.offsetHeight;
+        // Centré dans l'espace libre entre la date et le bas de l'écran
+        // (le haut de l'image est fondu, on le laisse effleurer la date)
+        var libreHaut = basTexte - hChateau * 0.12;
+        var depart = Math.min(0, (libreHaut + window.innerHeight) / 2 + hChateau / 2 - window.innerHeight);
         var centreVoulu = hEntete + (window.innerHeight - hEntete) / 2;
-        montee = Math.min(0, centreVoulu + hFinale / 2 - window.innerHeight);
+        var arrivee = Math.min(0, centreVoulu + hChateau * 1.32 / 2 - window.innerHeight);
+        cy = depart + (arrivee - depart) * e;
       }
       chateau.style.setProperty('--cs', echelle.toFixed(4));
-      chateau.style.setProperty('--cy', (montee * e).toFixed(1) + 'px');
+      chateau.style.setProperty('--cy', cy.toFixed(1) + 'px');
       chateau.style.setProperty('--co', (0.9 - 0.4 * e).toFixed(3));
       var t = Math.min(1, p * 1.7);
       heroCentre.style.opacity = (1 - t).toFixed(3);
