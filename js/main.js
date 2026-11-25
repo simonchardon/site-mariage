@@ -50,10 +50,12 @@
     var entete = document.querySelector('.entete');
     var etapes = [document.querySelector('.hero-plein')].concat(
       Array.prototype.slice.call(contenuAccueil.querySelectorAll(':scope > .carte')));
-    var enCours = false, verrouJusqua = 0, cumul = 0, dernierEvenement = 0;
+    var enCours = false, indexVise = 0, animation = null;
+    var dernierEvenement = 0, dernierSens = 0, pic = 0, creux = 0;
 
     var hauteurEntete = function () { return entete ? entete.offsetHeight : 0; };
-    var haut = function (el) { return el.getBoundingClientRect().top + window.scrollY; };
+    // Position dans la page sans tenir compte des animations (translate) en cours
+    var haut = function (el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; };
     // Position de défilement qui centre l'encart sous l'en-tête (ou l'aligne en haut s'il est trop grand)
     var cible = function (el) {
       var h = hauteurEntete(), dispo = window.innerHeight - h;
@@ -71,53 +73,65 @@
     };
     // Démarre tout de suite puis freine en douceur : la page réagit dès le geste
     var adoucir = function (t) { return 1 - Math.pow(1 - t, 4); };
+    // Glissé vers y ; s'il y en a déjà un en cours, il est réorienté depuis la position actuelle
     var allerA = function (y) {
+      if (animation) cancelAnimationFrame(animation);
       var depart = window.scrollY, distance = y - depart;
-      if (Math.abs(distance) < 2) return;
+      if (Math.abs(distance) < 2) { enCours = false; return; }
       var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null;
       enCours = true;
       var pas = function (t) {
         if (debut === null) debut = t;
         var p = Math.min(1, (t - debut) / duree);
         window.scrollTo({ top: depart + distance * adoucir(p), behavior: 'instant' });
-        if (p < 1) requestAnimationFrame(pas);
-        else { enCours = false; verrouJusqua = performance.now() + 180; }
+        if (p < 1) animation = requestAnimationFrame(pas);
+        else { enCours = false; animation = null; }
       };
-      requestAnimationFrame(pas);
+      animation = requestAnimationFrame(pas);
     };
     // Renvoie true si le geste a été consommé par la lecture d'un encart trop haut
     var defilerDansEncart = function (sens, delta) {
       var i = indexCourant(), el = etapes[i];
       var h = hauteurEntete(), dispo = window.innerHeight - h;
-      if (el.offsetHeight + 48 <= dispo) return false;
+      if (i === 0 || el.offsetHeight <= dispo + 80) return false;
       var y = window.scrollY, debutEl = haut(el) - h - 24, finEl = haut(el) + el.offsetHeight + 24 - window.innerHeight;
       if (sens > 0 && y < finEl - 2) { window.scrollTo({ top: Math.min(finEl, y + delta), behavior: 'instant' }); return true; }
       if (sens < 0 && y > debutEl + 2) { window.scrollTo({ top: Math.max(debutEl, y + delta), behavior: 'instant' }); return true; }
       return false;
     };
+    // Les étapes, plus le bas de page s'il dépasse le dernier encart
+    var position = function (i) {
+      if (i < etapes.length) return cible(etapes[i]);
+      return document.documentElement.scrollHeight - window.innerHeight;
+    };
+    var nbPositions = function () {
+      var bas = document.documentElement.scrollHeight - window.innerHeight;
+      return bas > cible(etapes[etapes.length - 1]) + 10 ? etapes.length + 1 : etapes.length;
+    };
+    // Chaque geste compte : pendant un glissé, un nouveau geste repart de l'étape visée
     var etapeSuivante = function (sens) {
-      var i = indexCourant(), j = Math.max(0, Math.min(etapes.length - 1, i + sens));
-      if (j === i) {
-        // Après le dernier encart : on laisse descendre jusqu'en bas de page
-        if (sens > 0) allerA(document.documentElement.scrollHeight - window.innerHeight);
-        return;
-      }
-      allerA(cible(etapes[j]));
+      var base = enCours ? indexVise : indexCourant();
+      indexVise = Math.max(0, Math.min(nbPositions() - 1, base + sens));
+      allerA(position(indexVise));
     };
 
     window.addEventListener('wheel', function (e) {
       if (e.ctrlKey) return; // zoom
       e.preventDefault();
       var maintenant = performance.now();
-      if (maintenant - dernierEvenement > 180) cumul = 0; // nouveau geste
-      dernierEvenement = maintenant;
-      if (enCours) return;
       var delta = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaY;
-      var sens = delta > 0 ? 1 : -1;
-      if (defilerDansEncart(sens, delta)) { verrouJusqua = 0; cumul = 0; return; }
-      if (maintenant < verrouJusqua) { verrouJusqua = maintenant + 140; return; } // inertie du pavé tactile
-      cumul += delta;
-      if (Math.abs(cumul) > 15) { cumul = 0; etapeSuivante(sens); }
+      if (!delta) return;
+      var sens = delta > 0 ? 1 : -1, fort = Math.abs(delta);
+      // Nouveau geste : pause, changement de sens, ou relance (le pavé tactile envoie
+      // une traîne d'inertie qui décroît ; un nouveau coup de doigt la fait remonter)
+      var nouveau = maintenant - dernierEvenement > 90 || sens !== dernierSens ||
+        (creux < pic * 0.6 && fort > creux * 1.8 && fort >= 12);
+      if (nouveau) { pic = fort; creux = fort; }
+      else { pic = Math.max(pic, fort); creux = fort < pic ? Math.min(creux, fort) : pic; }
+      dernierEvenement = maintenant; dernierSens = sens;
+      // Encart plus haut que l'écran : on le lit normalement jusqu'à son bord
+      if (!enCours && defilerDansEncart(sens, delta)) return;
+      if (nouveau) etapeSuivante(sens);
     }, { passive: false });
 
     document.addEventListener('keydown', function (e) {
@@ -125,7 +139,7 @@
       var sens = { ArrowDown: 1, PageDown: 1, ' ': e.shiftKey ? -1 : 1, ArrowUp: -1, PageUp: -1 }[e.key];
       if (!sens) return;
       e.preventDefault();
-      if (!enCours) etapeSuivante(sens);
+      etapeSuivante(sens);
     });
   }
 
