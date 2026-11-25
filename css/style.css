@@ -184,22 +184,6 @@ body.menu-ouvert { overflow: hidden; }
   text-align: center;
 }
 
-/* Liseré façon faire-part aussi en mobile (version plus fine du cadre desktop) */
-.carte::before {
-  content: "";
-  position: absolute;
-  z-index: -2;
-  inset: 0;
-  border: 34px solid transparent;
-  border-image: var(--liseret, url('../assets/cadres/sable.svg')) 50 fill / 34px stretch;
-  filter: drop-shadow(0 4px 10px rgba(95, 81, 69, 0.05));
-  pointer-events: none;
-}
-.liseret-rose  { --liseret: url('../assets/cadres/rose.svg'); }
-.liseret-jaune { --liseret: url('../assets/cadres/jaune.svg'); }
-.liseret-bleu  { --liseret: url('../assets/cadres/bleu.svg'); }
-.menu-mobile .carte::before { content: none; }
-.contenu .carte { padding-left: 10px; padding-right: 10px; }
 .titre-l { line-height: 0.9; }
 
 .separateur-section {
@@ -1049,6 +1033,7 @@ legend { padding: 0; margin-bottom: 8px; }
   .f-hg { --ax: -16px; }
   .f-hd { --ax: calc(100% + 16px); }
   .f-bg, .f-bd { --w: 62px; }
+  /* Marge pour que les fleurs des coins ne touchent pas le texte */
   .contenu .carte { padding-left: 18px; padding-right: 18px; }
   .f-bg { --ax: 10px; }
   .f-bd { --ax: calc(100% - 10px); }

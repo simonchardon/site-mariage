@@ -34,7 +34,9 @@
   /* ---------- Accueil : apparition des encarts au défilement ---------- */
   var contenuAccueil = document.querySelector('.page-accueil .contenu');
   var mouvementReduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (contenuAccueil && 'IntersectionObserver' in window && !mouvementReduit) {
+  // Ordinateur seulement : en mobile, le défilement reste naturel, sans effet d'étape
+  if (contenuAccueil && 'IntersectionObserver' in window && !mouvementReduit &&
+      window.matchMedia('(min-width: 900px)').matches) {
     document.documentElement.classList.add('anim');
     var observateur = new IntersectionObserver(function (entrees) {
       entrees.forEach(function (entree) {
