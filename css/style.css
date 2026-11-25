@@ -1057,13 +1057,18 @@ legend { padding: 0; margin-bottom: 8px; }
     will-change: transform, opacity;
   }
   .page-accueil .hero-centre { will-change: transform, opacity; }
-  /* Encarts sans liseré mais sur fond crème, pour rester lisibles devant le château */
-  .page-accueil .contenu .carte {
-    background: #fcf9f4;
-    border-radius: 18px;
-    box-shadow: 0 6px 18px rgba(95, 81, 69, .06);
-    padding-top: 26px;
-    padding-bottom: 26px;
+  /* Encarts sans liseré mais avec la même forme que sur ordinateur (coins incurvés),
+     sur fond crème pour rester lisibles devant le château */
+  .page-accueil .contenu .carte { padding-top: 26px; padding-bottom: 26px; }
+  .page-accueil .contenu .carte::before {
+    content: "";
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    border: 30px solid transparent;
+    border-image: url('../assets/cadres/forme.svg') 50 fill / 30px stretch;
+    filter: drop-shadow(0 6px 14px rgba(95, 81, 69, .06));
+    pointer-events: none;
   }
 
   /* Fleurs devant les encarts, plus petites et rejetées dans les coins */

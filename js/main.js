@@ -360,6 +360,52 @@
     rendu();
   }
 
+  /* ---------- Accueil : première étape glissée (mobile) ----------
+     Depuis l'accueil, un glissé vers le bas amène doucement au premier encart
+     (le temps de voir le château grossir) ; un glissé vers le haut depuis le
+     premier encart ramène à l'accueil. Ensuite le défilement reste naturel. */
+  var heroMobile = document.querySelector('.page-accueil .hero-plein');
+  var premierEncart = contenuAccueil && contenuAccueil.querySelector(':scope > .carte');
+  if (heroMobile && premierEncart && !mouvementReduit &&
+      window.matchMedia('(max-width: 899px)').matches) {
+    var enteteM = document.querySelector('.entete');
+    var hautM = function (el) { var y = 0; while (el) { y += el.offsetTop; el = el.offsetParent; } return y; };
+    var cibleM = function () {
+      var h = enteteM ? enteteM.offsetHeight : 0, dispo = window.innerHeight - h;
+      var marge = Math.max(16, (dispo - premierEncart.offsetHeight) / 2);
+      return Math.max(0, Math.round(hautM(premierEncart) - h - marge));
+    };
+    var animM = null, departDoigt = null, gere = false;
+    var glisserVers = function (y) {
+      if (animM) cancelAnimationFrame(animM);
+      var depart = window.scrollY, distance = y - depart, debut = null, duree = 1500;
+      if (Math.abs(distance) < 2) return;
+      var courbe = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+      var pas = function (t) {
+        if (debut === null) debut = t;
+        var p = Math.min(1, (t - debut) / duree);
+        window.scrollTo(0, depart + distance * courbe(p));
+        animM = p < 1 ? requestAnimationFrame(pas) : null;
+      };
+      animM = requestAnimationFrame(pas);
+    };
+    window.addEventListener('touchstart', function (e) {
+      departDoigt = e.touches[0].clientY; gere = false;
+    }, { passive: true });
+    window.addEventListener('touchmove', function (e) {
+      if (departDoigt === null) return;
+      var dy = departDoigt - e.touches[0].clientY, y = window.scrollY, c = cibleM();
+      if (animM) { e.preventDefault(); return; }
+      if (Math.abs(dy) < 8) return;
+      if (dy > 0 && y < c - 2) {            // vers le bas depuis l'accueil
+        e.preventDefault(); gere = true; departDoigt = null; glisserVers(c);
+      } else if (dy < 0 && y > 2 && y <= c + 2) { // vers le haut depuis le premier encart
+        e.preventDefault(); gere = true; departDoigt = null; glisserVers(0);
+      }
+    }, { passive: false });
+    window.addEventListener('touchend', function () { departDoigt = null; }, { passive: true });
+  }
+
   /* ---------- Accueil : château en arrière-plan (ordinateur et mobile) ----------
      Au défilement, le château grossit et remonte pendant que le titre s'efface,
      puis il reste en fond, plus discret, sous le contenu qui défile. */
