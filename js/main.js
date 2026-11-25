@@ -90,7 +90,7 @@
       var duree = Math.min(800, 480 + Math.abs(distance) * 0.2), debut = null, courbe = adoucir;
       // Passage entre l'accueil et le premier encart : plus lent et progressif,
       // pour laisser le temps de voir le château grossir et le titre s'effacer
-      if (Math.min(depart, y) < etapes[0].offsetHeight * 0.85) {
+      if (Math.min(depart, y) < 2) {
         duree = 1700;
         courbe = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
       }
