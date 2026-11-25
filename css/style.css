@@ -252,7 +252,6 @@ body.menu-ouvert { overflow: hidden; }
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  background: var(--fond); /* nécessaire pour le fondu « multiply » du château */
   min-height: calc(100svh - 56px);
   display: flex;
   align-items: flex-start;
@@ -270,7 +269,6 @@ body.menu-ouvert { overflow: hidden; }
   max-width: none;
   transform: translateX(-50%);
   opacity: 0.9;
-  mix-blend-mode: multiply;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%);
   mask-image: linear-gradient(to bottom, transparent 0%, #000 30%);
   pointer-events: none;
