@@ -7,11 +7,18 @@
   var boutonMenu = document.querySelector('.bouton-menu');
   var menu = document.getElementById('menu-mobile');
   if (boutonMenu && menu) {
+    var reduit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var basculerMenu = function (ouvrir) {
       boutonMenu.setAttribute('aria-expanded', String(ouvrir));
       boutonMenu.setAttribute('aria-label', ouvrir ? 'Fermer le menu' : 'Ouvrir le menu');
-      menu.hidden = !ouvrir;
       document.body.classList.toggle('menu-ouvert', ouvrir);
+      menu.classList.remove('fermeture');
+      if (ouvrir || reduit || menu.hidden) { menu.hidden = !ouvrir; return; }
+      // Fermeture animée : on masque une fois le fondu terminé
+      menu.classList.add('fermeture');
+      setTimeout(function () {
+        if (menu.classList.contains('fermeture')) { menu.hidden = true; menu.classList.remove('fermeture'); }
+      }, 260);
     };
     boutonMenu.addEventListener('click', function () {
       basculerMenu(boutonMenu.getAttribute('aria-expanded') !== 'true');
