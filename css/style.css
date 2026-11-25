@@ -23,8 +23,8 @@
   --filet-entete: #e6dfd5;
   --placeholder: #968a7e;
   --champ: #ffffff;
-  --carte-fond: #fffdf9;
-  --carte-bord: #ece3d6;
+  --carte-fond: #fcf9f4;
+  --carte-bord: #efe7dc;
 
   --manuscrit: 'Milton Two', cursive;
   --serif: 'Cardo', Georgia, serif;
@@ -662,7 +662,6 @@ legend { padding: 0; margin-bottom: 8px; }
     border-radius: 28px;
     background: var(--carte-fond);
     border: 1px solid var(--carte-bord);
-    box-shadow: 0 18px 40px -24px rgba(95, 81, 69, 0.35);
   }
   .menu-mobile .carte::before { content: none; }
   .carte--etroite { max-width: 820px; }
@@ -826,6 +825,11 @@ legend { padding: 0; margin-bottom: 8px; }
 
 @media (min-width: 900px) and (max-width: 1240px) {
   .contenu--musiques { padding: 48px 24px; }
+}
+
+/* Écran desktop étroit : pas assez de marge pour les fleurs sans qu'elles couvrent le texte */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .deco { display: none; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
