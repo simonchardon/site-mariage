@@ -344,4 +344,35 @@
 
     rendu();
   }
+
+  /* ---------- Accueil : château en arrière-plan (ordinateur) ----------
+     Au défilement, le château grossit et remonte pendant que le titre s'efface,
+     puis il reste en fond, plus discret, sous le contenu qui défile. */
+  var chateau = document.querySelector('.page-accueil .chateau-fond');
+  var heroCentre = document.querySelector('.page-accueil .hero-centre');
+  var heroPlein = document.querySelector('.page-accueil .hero-plein');
+  if (chateau && heroCentre && heroPlein && window.matchMedia('(min-width: 900px)').matches) {
+    // Une fois l'apparition terminée, l'opacité est pilotée par le défilement
+    var libererAnimation = function () { chateau.style.animation = 'none'; majChateau(); };
+    chateau.addEventListener('animationend', libererAnimation);
+    if (mouvementReduit) chateau.style.animation = 'none';
+    var majPrevue = false;
+    var majChateau = function () {
+      majPrevue = false;
+      var course = Math.max(1, heroPlein.offsetHeight * 0.85);
+      var p = Math.min(1, Math.max(0, window.scrollY / course));
+      var e = p * p * (3 - 2 * p); // départ et arrivée en douceur
+      chateau.style.setProperty('--cs', (1 + 0.32 * e).toFixed(4));
+      chateau.style.setProperty('--cy', (-0.1 * window.innerHeight * e).toFixed(1) + 'px');
+      chateau.style.setProperty('--co', (0.9 - 0.4 * e).toFixed(3));
+      var t = Math.min(1, p * 1.7);
+      heroCentre.style.opacity = (1 - t).toFixed(3);
+      heroCentre.style.transform = 'translateY(' + (-70 * t).toFixed(1) + 'px) scale(' + (1 - 0.06 * t).toFixed(4) + ')';
+    };
+    window.addEventListener('scroll', function () {
+      if (!majPrevue) { majPrevue = true; requestAnimationFrame(majChateau); }
+    }, { passive: true });
+    window.addEventListener('resize', majChateau);
+    majChateau();
+  }
 })();

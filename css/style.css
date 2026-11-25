@@ -769,6 +769,18 @@ legend { padding: 0; margin-bottom: 8px; }
   /* Accueil plein écran */
   .hero-plein { min-height: calc(100svh - 76px); padding: 7vh 200px 0; }
   .chateau-fond { width: min(1180px, 88vw, 105vh); }
+  /* Château fixe en arrière-plan : au défilement il grossit et remonte (js/main.js
+     pose --cy, --cs et --co), le titre s'efface et le contenu passe par-dessus */
+  .page-accueil .chateau-fond {
+    position: fixed;
+    transform-origin: 50% 100%;
+    transform: translateX(-50%) translateY(var(--cy, 0px)) scale(var(--cs, 1));
+    opacity: var(--co, .9);
+    will-change: transform, opacity;
+  }
+  .page-accueil .hero-centre { will-change: transform, opacity; }
+  /* Fond crème sous le texte des encarts pour rester lisible devant le château */
+  .page-accueil .contenu .carte { background-color: color-mix(in srgb, var(--fond) 94%, transparent); background-clip: padding-box; }
   .titre-hero { font-size: clamp(110px, 10vw, 150px); white-space: nowrap; }
   .titre-hero .esperluette { font-size: 0.8em; margin: 0 0.1em; }
   .mobile-seul { display: none; }
